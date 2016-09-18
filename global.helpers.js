@@ -9,6 +9,7 @@ var helpers = {
 		else
 		{
 			var sources = creep.room.find(FIND_SOURCES);
+			console.log('Sources: ' + JSON.stringify(sources));
 			var sourceCounts = [];
 			_(sources).forEach(function(source) {
 				var count = _.filter(Game.creeps, function(c) { return c.targetSourceId == source.id }).length;
