@@ -16,7 +16,7 @@ var helpers = {
 			});
 			//sourceCounts = _.orderBy(sourceCounts, ['count']);
 			var s = _.min(sourceCounts, 'count');
-			console.log('Source: ' + JSON.stringify(source));
+			console.log('Source: ' + JSON.stringify(s));
 			s = s.source;
 			//var source = sourceCounts[0].source;
 			creep.memory.targetSourceId = s.id;
