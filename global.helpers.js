@@ -15,6 +15,7 @@ var helpers = {
 				sourceCounts.push({source: source, count: count});
 			});
 			//sourceCounts = _.orderBy(sourceCounts, ['count']);
+			console.log('Sources: ' + JSON.stringify(sourceCounts));
 			var s = _.min(sourceCounts, 'count');
 			console.log('Source: ' + JSON.stringify(s));
 			s = s.source;
