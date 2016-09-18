@@ -15,7 +15,7 @@ var roleRepairer = {
 	    }
 
 	    if(creep.memory.repairing) {
-            var structure = creep.pos.findNearest(Game.STRUCTURES, {
+            var structure = creep.pos.findClosestByRange(Game.STRUCTURES, {
                     filter: function(structure) {
                         return structure.hits < structure.hitsMax / 2;
                     }
