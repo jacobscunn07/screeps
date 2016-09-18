@@ -22,9 +22,20 @@ var roleHarvester = {
                                 structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
                     }
             });
-            if(targets.length > 0) {
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0]);
+
+            if(_.every(targets, function(t) { return t.hits == t.hitsMax})) {
+                targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+                if(targets.length) {
+                    if(creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(targets[0]);
+                    }
+                }
+            }
+            else {
+                if(targets.length > 0) {
+                    if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(targets[0]);
+                    }
                 }
             }
         }
