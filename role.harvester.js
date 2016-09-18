@@ -11,6 +11,7 @@ var roleHarvester = {
             }*/
             var source = helpers.findSource(creep);
             if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                console.log("Creep Source: " + JSON.stringify(source));
                 creep.moveTo(source);
             }
         }
