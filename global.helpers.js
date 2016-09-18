@@ -15,10 +15,12 @@ var helpers = {
 				sourceCounts.push({source: source, count: count});
 			});
 			//sourceCounts = _.orderBy(sourceCounts, ['count']);
-			var source = _.min(sourceCounts, 'count').source;
+			var s = _.min(sourceCounts, 'count');
+			console.log('Source: ' + JSON.stringify(source));
+			s = s.source;
 			//var source = sourceCounts[0].source;
-			creep.memory.targetSourceId = source.id;
-			return source;
+			creep.memory.targetSourceId = s.id;
+			return s;
 		}
 	}
 };
