@@ -13,7 +13,7 @@ var roleHarvester = {
             });
         console.log(JSON.stringify(targets));
         var shouldBuild = _.every(targets, function(t){return t.hits == t.hitsMax});
-        console.log("shouldbuild: " + shouldbuild);
+        console.log("shouldbuild: " + shouldBuild);
         if(shouldBuild) {
             console.log("Inside Should Build");
             var buildingTargets = creep.room.find(FIND_CONSTRUCTION_SITES);
