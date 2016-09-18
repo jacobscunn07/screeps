@@ -1,3 +1,5 @@
+var helpers = require('global.helpers');
+
 var roleUpgrader = {
 
     /** @param {Creep} creep **/
