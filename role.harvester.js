@@ -14,6 +14,7 @@ var roleHarvester = {
         var shouldBuild = _.every(targets, function(t){return t.hits == t.hitsMax});
 
         if(shouldBuild) {
+            console.log("Inside Should Build");
             var buildingTargets = creep.room.find(FIND_CONSTRUCTION_SITES);
             if(buildingTargets.length) {
                 if(creep.build(buildingTargets[0]) == ERR_NOT_IN_RANGE) {
@@ -22,7 +23,9 @@ var roleHarvester = {
             }
         }
         else {
+            console.log("Inside Should Harvest");
     	    if(creep.carry.energy < creep.carryCapacity) {
+                console.log("Finding Source");
                 var source = helpers.findSource(creep);
                 if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source);
@@ -30,6 +33,7 @@ var roleHarvester = {
             }
             else {
                 if(targets.length > 0) {
+                    console.log("Transfering resource");
                     if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                         creep.moveTo(targets[0]);
                     }
