@@ -3,13 +3,13 @@ var _ = require('lodash');
 var helpers = {
 	findSource: function(creep)
 	{
-		/*if(creep.memory.targetSourceId) {
+		if(creep.memory.targetSourceId) {
 			var source = Game.getObjectById(creep.memory.targetSourceId);
 			console.log(creep.name + " heading to source " + source.id);
 			return source;
 		}
 		else
-		{*/
+		{
 			var sources = creep.room.find(FIND_SOURCES);
 			var sourceCounts = [];
 			_.forEach(sources, function(source) {
@@ -23,7 +23,7 @@ var helpers = {
 			s = s.source;
 			creep.memory.targetSourceId = s.id;
 			return s;
-		//}
+		}
 	}
 };
 
