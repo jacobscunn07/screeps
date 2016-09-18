@@ -1,4 +1,4 @@
-var helpers = require('gobal.helpers');
+var helpers = require('global.helpers');
 
 var roleHarvester = {
 
