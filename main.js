@@ -25,10 +25,10 @@ module.exports.loop = function () {
         console.log('Spawning new builder: ' + newName);
     }
 
-    if(repairers.length < 2) {
-        var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,CARRY,MOVE], undefined, {role: 'repairer'});
-        console.log('Spawning new repairer: ' + newName);
-    }
+    // if(repairers.length < 2) {
+    //     var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,CARRY,MOVE], undefined, {role: 'repairer'});
+    //     console.log('Spawning new repairer: ' + newName);
+    // }
     
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
