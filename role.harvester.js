@@ -1,5 +1,4 @@
 var helpers = require('global.helpers');
-var _ = require('lodash');
 
 var roleHarvester = {
 
