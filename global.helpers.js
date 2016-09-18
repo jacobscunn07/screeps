@@ -12,8 +12,11 @@ var helpers = {
 			console.log('Sources: ' + JSON.stringify(sources));
 			var sourceCounts = [];
 			_(sources).forEach(function(source) {
+				console.log("Looping Source: " + JSON.stringify(source));
 				var count = _.filter(Game.creeps, function(c) { return c.targetSourceId == source.id }).length;
-				sourceCounts.push({source: source, count: count});
+				var sourceObject = {source: source, count: count};
+				console.log("Looping Source Object: " + JSON.stringify(sourceObject));
+				sourceCounts.push(sourceObject);
 			});
 			//sourceCounts = _.orderBy(sourceCounts, ['count']);
 			console.log('Sources: ' + JSON.stringify(sourceCounts));
