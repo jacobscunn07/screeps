@@ -20,4 +20,4 @@ var helpers = {
 	}
 };
 
-return helpers;
+module.exports = helpers;
