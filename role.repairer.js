@@ -15,7 +15,7 @@ var roleRepairer = {
 	    }
 
 	    if(creep.memory.repairing) {
-            var structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: function(s) {return s.hits < s.hitsMax}});
+            var structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: function(s) {return s.hits < (s.hitsMax*.7)}});
 
             if(creep.moveTo(structure) == ERR_NOT_IN_RANGE) {
                 creep.say("repairing...")
