@@ -11,8 +11,9 @@ var roleHarvester = {
                                 structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
                     }
             });
+        console.log(JSON.stringify(targets));
         var shouldBuild = _.every(targets, function(t){return t.hits == t.hitsMax});
-
+        console.log("shouldbuild: " + shouldbuild);
         if(shouldBuild) {
             console.log("Inside Should Build");
             var buildingTargets = creep.room.find(FIND_CONSTRUCTION_SITES);
