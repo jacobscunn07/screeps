@@ -15,7 +15,7 @@ var helpers = {
 				sourceCounts.push({source: source, count: count});
 			});
 			//sourceCounts = _.orderBy(sourceCounts, ['count']);
-			var source = _.min(sourceCounts, function(s){return s.count})[0].source;
+			var source = _.min(sourceCounts, 'count').source;
 			//var source = sourceCounts[0].source;
 			creep.memory.targetSourceId = source.id;
 			return source;
