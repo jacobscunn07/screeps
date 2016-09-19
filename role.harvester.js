@@ -16,7 +16,7 @@ var roleHarvester = {
                         c.store.energy > 0;
                     }
                 });
-            var container = creeper.pos.findClosestByRange(containers);
+            var container = creep.pos.findClosestByRange(containers);
             if(creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(container);    
             }
