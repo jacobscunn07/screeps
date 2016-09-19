@@ -23,12 +23,14 @@ var helpers = {
 		}
 	},
 	findClosestContainer: function(creeper) {
+		// var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
+		// 	filter: function(c) { 
+		// 		return c.structureType == STRUCTURE_CONTAINER && 
+		// 			c.store.energy < c.storeCapacity;
+		// 		}
+		// 	});
 		var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
-			filter: function(c) { 
-				return c.structureType == STRUCTURE_CONTAINER && 
-					c.store.energy < c.storeCapacity;
-				}
-			});
+			filter: function(c) { return c.structureType == STRUCTURE_CONTAINER }});
 		var container = creeper.pos.findClosestByRange(containers);
 
 		return container;
