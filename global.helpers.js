@@ -30,7 +30,7 @@ var helpers = {
 		// 		}
 		// 	});
 		var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
-			filter: function(c) { return c.structureType == STRUCTURE_CONTAINER }});
+			filter: function(c) { return c.structureType == STRUCTURE_CONTAINER && c.store.energy < c.storeCapacity  }});
 		var container = creeper.pos.findClosestByRange(containers);
 
 		return container;
