@@ -19,10 +19,9 @@ module.exports.loop = function () {
     if(harvesters.length < 2) {
         roleHarvester.create();
     }
-    
-    if(Game.spawns['Spawn1'].canCreateCreep([WORK,CARRY,MOVE], undefined, {role: 'upgrader'}) && upgraders.length < 2) {
-        var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'upgrader'});
-        console.log('Spawning new upgrader: ' + newName);
+
+    if(upgraders.length < 2) {
+        roleUpgrader.create();
     }
 
     if(Game.spawns['Spawn1'].canCreateCreep([WORK,CARRY,MOVE], undefined, {role: 'builder'}) && Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0 && builders.length < 1) {
