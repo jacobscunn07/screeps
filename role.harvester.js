@@ -5,17 +5,10 @@ var roleHarvester = {
     /** @param {Creep} creep **/
     run: function(creep) {
         if(creep.carry.energy < creep.carryCapacity) {
-            // var source = helpers.findSource(creep);
-            // if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            //     creep.moveTo(source);
-            // }
             var energy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-            console.log(JSON.stringify(energy));
             if(energy)
             {
-                //console.log(creep.pickup(energy));
                 if(creep.pickup(energy) == ERR_NOT_IN_RANGE) {
-                    console.log("if pickup == err not in range");
                     creep.moveTo(energy);
                 }
             }
