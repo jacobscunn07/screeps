@@ -1,8 +1,21 @@
 var helpers = require('global.helpers');
 
 var roleMiner = {
+    create: function() {
+        var tiers = [
+            [WORK,WORK,WORK,CARRY,MOVE,MOVE],
+            [WORK,WORK,WORK,CARRY,MOVE],
+            [WORK,WORK,CARRY,MOVE],
+            [WORK,CARRY,MOVE]
+        ];
 
-    /** @param {Creep} creep **/
+        for(var tier in tiers) {
+            if(Game.spawns.Spawn1.canCreateCreep(tier, undefined, {role: 'miner'})) {
+                var name = Game.spawns.Spawn1.createCreep(tier, undefined, {role: 'miner'});
+                console.log("Spawning Miner, " + name);
+            }
+        }
+    },
     run: function(creep) {
 	    if(creep.carry.energy < creep.carryCapacity) {
             var source = helpers.findSource(creep);
@@ -11,18 +24,6 @@ var roleMiner = {
             }
         }
         else {
-            // var targets = creep.room.find(FIND_STRUCTURES, {
-            //     filter: (structure) => {
-            //         return (structure.structureType == STRUCTURE_EXTENSION ||
-            //                 structure.structureType == STRUCTURE_SPAWN ||
-            //                 structure.structureType == STRUCTURE_TOWER) && structure.energy < structure.energyCapacity;
-            //     }
-            // });
-            // if(targets.length > 0) {
-            //     if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            //         creep.moveTo(targets[0]);
-            //     }
-            // }
             var container = helpers.findClosestContainer(creep);
             if(creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(container);    
