@@ -23,10 +23,12 @@ var roleHarvester = {
         }
         else {
             var energy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-
+            JSON.stringify(energy);
             if(energy)
             {
+                console.log("if energy");
                 if(creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                    console.log("if pickup == err not in range");
                     creep.moveTo(targets[0]);
                 }
             }
