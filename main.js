@@ -24,14 +24,12 @@ module.exports.loop = function () {
         roleUpgrader.create();
     }
 
-    if(Game.spawns['Spawn1'].canCreateCreep([WORK,CARRY,MOVE], undefined, {role: 'builder'}) && Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0 && builders.length < 1) {
-        var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'builder'});
-        console.log('Spawning new builder: ' + newName);
+    if(builders.length < 1 && Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+        roleBuilder.create();
     }
     else if (Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length == 0) {
         _.forEach(builders, function(builder) { builder.suicide(); });
     }
-
 
     var needsRepairCount = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: function(s){return s.hits < (s.hitsMax*.45)}}).length;
     if(Game.spawns['Spawn1'].canCreateCreep([WORK,CARRY,MOVE], undefined, {role: 'repairer'}) && needsRepairCount > 0 && repairers.length < 1) {

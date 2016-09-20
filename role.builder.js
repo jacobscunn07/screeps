@@ -1,8 +1,18 @@
 var helpers = require('global.helpers');
 
 var roleBuilder = {
+    create: function() {
+        var tiers = [
+            {body:[WORK,CARRY,MOVE]}
+        ];
 
-    /** @param {Creep} creep **/
+        _.forEach(tiers, function(tier){
+            if(Game.spawns.Spawn1.canCreateCreep(tier.body, undefined, {role: 'builder'}) == OK) {
+                var name = Game.spawns.Spawn1.createCreep(tier.body, undefined, {role: 'builder'});
+                console.log("Spawning Builder, " + name);
+            }
+        });
+    },
     run: function(creep) {
 
 	    if(creep.memory.building && creep.carry.energy == 0) {
