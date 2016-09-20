@@ -17,11 +17,9 @@ var roleBuilder = {
 
 	    if(creep.memory.building && creep.carry.energy == 0) {
             creep.memory.building = false;
-            creep.say('harvesting');
 	    }
 	    if(!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
 	        creep.memory.building = true;
-	        creep.say('building');
 	    }
 
 	    if(creep.memory.building) {
@@ -33,16 +31,6 @@ var roleBuilder = {
             }
 	    }
 	    else {
-	        /*
-	        var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(sources[0]);
-            }
-			*/
-            // var source = helpers.findSource(creep);
-            // if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            //     creep.moveTo(source);
-            // }
             var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
                 filter: function(c) { 
                     return c.structureType == STRUCTURE_CONTAINER && 

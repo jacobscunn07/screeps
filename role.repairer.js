@@ -17,11 +17,9 @@ var roleRepairer = {
 
         if(creep.memory.repairing && creep.carry.energy == 0) {
             creep.memory.repairing = false;
-            creep.say('harvesting');
         }
         if(!creep.memory.repairing && creep.carry.energy == creep.carryCapacity) {
             creep.memory.repairing = true;
-            creep.say('repairing');
         }
 
         if(creep.memory.repairing) {
