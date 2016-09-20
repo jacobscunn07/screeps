@@ -3,10 +3,10 @@ var helpers = require('global.helpers');
 var roleMiner = {
     create: function() {
         var tiers = [
-            {body:[WORK,WORK,WORK,CARRY,MOVE,MOVE]},
-            {body:[WORK,WORK,WORK,CARRY,MOVE]},
+            {body:[WORK,CARRY,MOVE]},
             {body:[WORK,WORK,CARRY,MOVE]},
-            {body:[WORK,CARRY,MOVE]}
+            {body:[WORK,WORK,WORK,CARRY,MOVE]},
+            {body:[WORK,WORK,WORK,CARRY,MOVE,MOVE]}
         ];
 
         _.forEach(tiers, function(tier){
