@@ -36,14 +36,14 @@ module.exports.loop = function () {
     }
 
 
-    // var needsRepairCount = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: function(s){return s.hits < (s.hitsMax*.45)}}).length;
-    // if(needsRepairCount > 0 && repairers.length < 1) {
-    //     var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'repairer'});
-    //     console.log('Spawning new repairer: ' + newName);
-    // }
-    // else if (needsRepairCount == 0) {
-    //     _.forEach(repairers, function(repairer){ repairer.suicide(); });
-    // }
+    var needsRepairCount = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: function(s){return s.hits < (s.hitsMax*.45)}}).length;
+    if(needsRepairCount > 0 && repairers.length < 1) {
+        var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'repairer'});
+        console.log('Spawning new repairer: ' + newName);
+    }
+    else if (needsRepairCount == 0) {
+        _.forEach(repairers, function(repairer){ repairer.suicide(); });
+    }
     
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
