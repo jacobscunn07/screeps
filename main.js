@@ -20,7 +20,7 @@ module.exports.loop = function () {
         roleHarvester.create();
     }
 
-    if(upgraders.length < 2) {
+    if(upgraders.length < 4) {
         roleUpgrader.create();
     }
 
