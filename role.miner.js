@@ -6,7 +6,9 @@ var roleMiner = {
             {body:[WORK,CARRY,MOVE]},
             {body:[WORK,WORK,CARRY,MOVE]},
             {body:[WORK,WORK,WORK,CARRY,MOVE]},
-            {body:[WORK,WORK,WORK,CARRY,MOVE,MOVE]}
+            {body:[WORK,WORK,WORK,WORK,CARRY,MOVE]},
+            {body:[WORK,WORK,WORK,WORK,WORK,CARRY,MOVE]},
+            {body:[WORK,WORK,WORK,WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE]}
         ];
 
         _.forEach(tiers, function(tier){
