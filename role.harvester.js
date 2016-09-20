@@ -1,8 +1,18 @@
 var helpers = require('global.helpers');
 
 var roleHarvester = {
+    create: function() {
+        var tiers = [
+            {body:[WORK,CARRY,MOVE]}
+        ];
 
-    /** @param {Creep} creep **/
+        _.forEach(tiers, function(tier){
+            if(Game.spawns.Spawn1.canCreateCreep(tier.body, undefined, {role: 'harvester'}) == OK) {
+                var name = Game.spawns.Spawn1.createCreep(tier.body, undefined, {role: 'harvester'});
+                console.log("Spawning Harvester, " + name);
+            }
+        });
+    },
     run: function(creep) {
         if(creep.carry.energy < creep.carryCapacity) {
             var energy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);

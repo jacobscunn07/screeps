@@ -11,7 +11,6 @@ var roleMiner = {
 
         _.forEach(tiers, function(tier){
             if(Game.spawns.Spawn1.canCreateCreep(tier.body, undefined, {role: 'miner'}) == OK) {
-                console.log(JSON.stringify(tier.body));
                 var name = Game.spawns.Spawn1.createCreep(tier.body, undefined, {role: 'miner'});
                 console.log("Spawning Miner, " + name);
             }
