@@ -3,18 +3,19 @@ var helpers = require('global.helpers');
 var roleMiner = {
     create: function() {
         var tiers = [
-            [WORK,WORK,WORK,CARRY,MOVE,MOVE],
-            [WORK,WORK,WORK,CARRY,MOVE],
-            [WORK,WORK,CARRY,MOVE],
-            [WORK,CARRY,MOVE]
+            {body:[WORK,WORK,WORK,CARRY,MOVE,MOVE]},
+            {body:[WORK,WORK,WORK,CARRY,MOVE]},
+            {body:[WORK,WORK,CARRY,MOVE]},
+            {body:[WORK,CARRY,MOVE]}
         ];
 
-        for(var tier in tiers) {
-            if(Game.spawns.Spawn1.canCreateCreep(tier, undefined, {role: 'miner'})) {
-                var name = Game.spawns.Spawn1.createCreep(tier, undefined, {role: 'miner'});
+        _.forEach(tiers, function(tier){
+            if(Game.spawns.Spawn1.canCreateCreep(tier.body, undefined, {role: 'miner'}) == OK) {
+                console.log(JSON.stringify(tier.body));
+                var name = Game.spawns.Spawn1.createCreep(tier.body, undefined, {role: 'miner'});
                 console.log("Spawning Miner, " + name);
             }
-        }
+        });
     },
     run: function(creep) {
 	    if(creep.carry.energy < creep.carryCapacity) {
