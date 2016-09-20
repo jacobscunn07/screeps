@@ -31,10 +31,9 @@ module.exports.loop = function () {
         _.forEach(builders, function(builder) { builder.suicide(); });
     }
 
-    var needsRepairCount = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: function(s){return s.hits < (s.hitsMax*.45)}}).length;
-    if(Game.spawns['Spawn1'].canCreateCreep([WORK,CARRY,MOVE], undefined, {role: 'repairer'}) && needsRepairCount > 0 && repairers.length < 1) {
-        var newName = Game.spawns['Spawn1'].createCreep([WORK,CARRY,MOVE], undefined, {role: 'repairer'});
-        console.log('Spawning new repairer: ' + newName);
+    var needsRepairCount = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: function(s){return s.hits < (s.hitsMax*.7)}}).length;
+    if(repairers.length < 1 && needsRepairCount > 0){
+        roleRepairer.create();
     }
     else if (needsRepairCount == 0) {
         _.forEach(repairers, function(repairer){ repairer.suicide(); });
