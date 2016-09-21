@@ -27,6 +27,10 @@ module.exports.loop = function () {
             }
         });
     };
+
+    Creep.prototype.findClosestSource = function() {
+        return this.pos.findClosestByPath(FIND_SOURCES);
+    };
     
     
     
