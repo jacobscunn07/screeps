@@ -6,6 +6,22 @@ var roleMiner = require('role.miner');
 var helpers = require('global.helpers');
 
 module.exports.loop = function () {
+    Creep.prototype.sayHi = function(){this.say("hi")};
+    
+    Creep.prototype.findClosestSpawn = function() {
+        return this.pos.findClosestByPath(FIND_MY_SPAWNS);
+    };
+    
+    Creep.prototype.findClosestContainer = function() {
+        return this.pos.findClosestByPath(FIND_MY_SPAWNS);
+    };
+    
+    Creep.prototype.findClosestContainer = function() {
+        return this.pos.findClosestByPath(FIND_MY_SPAWNS);
+    };
+    
+    
+    
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
@@ -24,7 +40,7 @@ module.exports.loop = function () {
         roleUpgrader.create();
     }
 
-    if(builders.length < 1 && Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0) {
+    if(builders.length < 3 && Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length > 0) {
         roleBuilder.create();
     }
     else if (Game.spawns['Spawn1'].room.find(FIND_CONSTRUCTION_SITES).length == 0) {
@@ -41,6 +57,7 @@ module.exports.loop = function () {
     
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
+        creep.sayHi();
         if(creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
