@@ -3,7 +3,9 @@ var helpers = require('global.helpers');
 var roleUpgrader = {
     create: function() {
         var tiers = [
-            {body:[WORK,CARRY,MOVE]}
+            {body:[WORK,CARRY,MOVE]},
+            {body:[WORK,CARRY,CARRY,MOVE]},
+            {body:[WORK,CARRY,CARRY,CARRY,MOVE]}
         ];
 
         _.forEach(tiers, function(tier){
