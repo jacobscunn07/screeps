@@ -12,7 +12,7 @@ module.exports.loop = function () {
         return this.pos.findClosestByPath(FIND_MY_SPAWNS);
     };
     
-    Creep.prototype.findClosestContainer = function() {
+    Creep.prototype.findClosestSpawn = function() {
         return this.pos.findClosestByPath(FIND_MY_SPAWNS);
     };
     
