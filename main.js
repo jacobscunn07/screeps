@@ -31,7 +31,14 @@ module.exports.loop = function () {
     Creep.prototype.findClosestSource = function() {
         return this.pos.findClosestByPath(FIND_SOURCES);
     };
-    
+
+    Creep.prototype.findClosestStructureNeedingRepair = function() {
+        return this.pos.findClosestByPath(FIND_STRUCTURES, {filter: function(s) {return s.hits < (s.hitsMax*.7)}});
+    };
+
+    Creep.prototype.findClosestConstructionSite = function() {
+        return this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+    };
     
     
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
