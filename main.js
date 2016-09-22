@@ -29,7 +29,7 @@ module.exports.loop = function () {
     };
 
     Creep.prototype.findSources = function() {
-          return this.pos.find(FIND_SOURCES);
+          return this.room.find(FIND_SOURCES);
     };
 
     Creep.prototype.findClosestSource = function() {
@@ -43,8 +43,8 @@ module.exports.loop = function () {
     Creep.prototype.findClosestConstructionSite = function() {
         return this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
     };
-    
-    
+
+
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
     var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder');
@@ -77,7 +77,7 @@ module.exports.loop = function () {
     else if (needsRepairCount == 0) {
         _.forEach(repairers, function(repairer){ repairer.suicide(); });
     }
-    
+
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
         creep.sayHi();

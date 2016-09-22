@@ -20,15 +20,28 @@ var roleMiner = {
     },
     run: function(creep) {
 	    if(creep.carry.energy < creep.carryCapacity) {
-            var source = helpers.findSource(creep);
-            if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
-            }
+            var source = null;
+            if(creep.memory.targetSourceId) {
+        			var source = Game.getObjectById(creep.memory.targetSourceId);
+        		}
+            else {
+              var sources = creep.findSources();
+              _.forEach(sources, function(s) {
+                if(!_.any(Game.creeps), function(c) { return c.memory.targetSourceId == s.id}) {
+                  source = s;
+                  creep.memory.targetSourceId = source.id;
+                }
+        			});
+          }
+
+          if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(source);
+          }
         }
         else {
             var container = helpers.findClosestContainer(creep);
             if(creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container);    
+                creep.moveTo(container);
             }
         }
 	}
