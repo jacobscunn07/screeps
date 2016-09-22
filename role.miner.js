@@ -25,14 +25,9 @@ var roleMiner = {
         			var source = Game.getObjectById(creep.memory.targetSourceId);
         		}
             else {
-              var sources = creep.findSources();
-              _.forEach(sources, function(s) {
-                if(!_.any(Game.creeps), function(c) { return c.memory.targetSourceId == s.id}) {
-                  source = s;
-                  creep.memory.targetSourceId = source.id;
-                }
-        			});
-          }
+              var source = findSourceToHarvest();
+              creep.memory.targetSourceId = source.id;
+            }
 
           if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
               creep.moveTo(source);
@@ -45,6 +40,15 @@ var roleMiner = {
           }
         }
 	}
+};
+
+var findSourceToHarvest = function() {
+  var sources = creep.findSources();
+  _.forEach(sources, function(s) {
+    if(!_.any(Game.creeps), function(c) { return c.memory.targetSourceId == s.id}) {
+      return s;
+    }
+  });
 };
 
 module.exports = roleMiner;
