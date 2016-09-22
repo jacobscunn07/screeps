@@ -22,10 +22,10 @@ var roleMiner = {
 	    if(creep.carry.energy < creep.carryCapacity) {
             var source = null;
             if(creep.memory.targetSourceId) {
-        			var source = Game.getObjectById(creep.memory.targetSourceId);
+        			source = Game.getObjectById(creep.memory.targetSourceId);
         		}
             else {
-              var source = findSourceToHarvest();
+              source = findSourceToHarvest();
               creep.memory.targetSourceId = source.id;
             }
 

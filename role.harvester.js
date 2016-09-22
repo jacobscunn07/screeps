@@ -23,20 +23,13 @@ var roleHarvester = {
                 }
             }
             else {
-                var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
-                    filter: function(c) { 
-                        return c.structureType == STRUCTURE_CONTAINER && 
-                            c.store.energy > 0;
-                        }
-                    });
-                var container = creep.pos.findClosestByRange(containers);
+                var container = creep.findClosestContainerWithEnergy();
                 if(creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container);    
+                    creep.moveTo(container);
                 }
             }
         }
         else {
-            
             var targets = creep.room.find(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType == STRUCTURE_EXTENSION ||

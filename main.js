@@ -23,7 +23,7 @@ module.exports.loop = function () {
     Creep.prototype.findClosestContainerWithEnergy = function() {
         return this.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: function(c) {
-                return c.structureType == STRUCTURE_CONTAINER && c.store.energy < c.storeCapacity && c.store.energy > 0;
+                return c.structureType == STRUCTURE_CONTAINER  && c.store.energy > 0;
             }
         });
     };
