@@ -27,18 +27,20 @@ var roleUpgrader = {
 	    if(creep.memory.upgrading) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
+                creep.placeRoadUnderMe();   
             }
         }
         else {
-            var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
-                filter: function(c) { 
-                    return c.structureType == STRUCTURE_CONTAINER && 
+            var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, {
+                filter: function(c) {
+                    return c.structureType == STRUCTURE_CONTAINER &&
                         c.store.energy > 0;
                     }
                 });
             var container = creep.pos.findClosestByRange(containers);
             if(creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container);    
+                creep.moveTo(container);
+                creep.placeRoadUnderMe();
             }
         }
 	}

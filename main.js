@@ -54,6 +54,10 @@ module.exports.loop = function () {
         return this.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
     };
 
+    Creep.prototype.placeRoadUnderMe = function() {
+      return this.pos.createConstructionSite(STRUCTURE_ROAD);
+    };
+
 
     var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester');
     var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader');
