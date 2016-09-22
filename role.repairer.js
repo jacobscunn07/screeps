@@ -28,27 +28,21 @@ var roleRepairer = {
                 if(creep.repair(structure) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(structure);
                 }
-                
+
                 if(structure.hits == structure.hitsMax) {
                     creep.memory.structure = null;
                 }
             }
             else {
-                var structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {filter: function(s) {return s.hits < (s.hitsMax*.7)}});
+                var structure = creep.findClosestConstructionSite();
                 creep.memory.structure = structure.id;
             }
         }
         else {
-            var containers = Game.spawns.Spawn1.room.find(FIND_STRUCTURES, { 
-                filter: function(c) { 
-                    return c.structureType == STRUCTURE_CONTAINER && 
-                        c.store.energy > 0;
-                    }
-                });
-            var container = creep.pos.findClosestByRange(containers);
-            if(creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container);    
-            }
+          var container = creep.findClosestContainerWithEnergy();
+          if(creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(container);
+          }
         }
     }
 };
