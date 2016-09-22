@@ -73,7 +73,7 @@ module.exports.loop = function () {
         roleHarvester.create();
     }
 
-    if(upgraders.length < 4) {
+    if(upgraders.length < 6) {
         roleUpgrader.create();
     }
 
@@ -85,7 +85,7 @@ module.exports.loop = function () {
     }
 
     var needsRepairCount = Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {filter: function(s){return s.hits < (s.hitsMax*.7)}}).length;
-    if(repairers.length < 1 && needsRepairCount > 0){
+    if(repairers.length < 2 && needsRepairCount > 0){
         roleRepairer.create();
     }
     else if (needsRepairCount == 0) {
