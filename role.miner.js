@@ -39,10 +39,10 @@ var roleMiner = {
           }
         }
         else {
-            var container = helpers.findClosestContainer(creep);
-            if(creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container);
-            }
+          var container = creep.findClosestContainerThatIsNotFull();
+          if(creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+              creep.moveTo(container);
+          }
         }
 	}
 };
