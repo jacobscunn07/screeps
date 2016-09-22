@@ -1,5 +1,17 @@
 var helpers = require('global.helpers');
 
+var findSourceToHarvest = function(creep) {
+  var sources = creep.findSources();
+  var source = null;
+  _.forEach(sources, function(s) {
+    if(!_.any(Game.creeps, function(c) { return c.memory.targetSourceId == s.id})) {
+        console.log(JSON.stringify(s));
+      source = s;
+    }
+  });
+  return source;
+};
+
 var roleMiner = {
     create: function() {
         var tiers = [
@@ -25,7 +37,7 @@ var roleMiner = {
         			source = Game.getObjectById(creep.memory.targetSourceId);
         		}
             else {
-              source = findSourceToHarvest();
+              source = findSourceToHarvest(creep);
               creep.memory.targetSourceId = source.id;
             }
 
@@ -42,13 +54,6 @@ var roleMiner = {
 	}
 };
 
-var findSourceToHarvest = function() {
-  var sources = creep.findSources();
-  _.forEach(sources, function(s) {
-    if(!_.any(Game.creeps), function(c) { return c.memory.targetSourceId == s.id}) {
-      return s;
-    }
-  });
-};
+
 
 module.exports = roleMiner;
