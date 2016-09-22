@@ -34,7 +34,7 @@ var roleRepairer = {
                 }
             }
             else {
-                var structure = creep.findClosestConstructionSite();
+                var structure = creep.findClosestStructureNeedingRepair();
                 creep.memory.structure = structure.id;
             }
         }
