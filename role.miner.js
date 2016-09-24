@@ -38,7 +38,7 @@ var roleMiner = {
         		}
             else {
               source = findSourceToHarvest(creep);
-              creep.memory.targetSourceId = source.id;
+              creep.memory.targetSourceId = source ? source.id : null;
             }
 
           if(creep.harvest(source) == ERR_NOT_IN_RANGE) {
