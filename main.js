@@ -22,6 +22,14 @@ module.exports.loop = function () {
         });
     };
 
+    Creep.prototype.getStorage = function() {
+        return this.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity);
+            }
+        });
+    };
+
     Creep.prototype.findClosestContainerThatIsNotFull = function() {
         return this.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: function(c) {

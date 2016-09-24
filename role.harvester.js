@@ -30,10 +30,12 @@ var roleHarvester = {
             }
         }
         else {
-            var target = creep.findClosestPlaceToDumpEnergy();
-            if(target && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-              creep.moveTo(target);
-            }
+          var target = creep.findClosestPlaceToDumpEnergy();
+          var storage = creep.getStorage();
+          var target = target ? target : storage;
+          if(target && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(target);
+          }
         }
     }
 };
