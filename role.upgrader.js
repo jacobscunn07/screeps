@@ -5,7 +5,10 @@ var roleUpgrader = {
         var tiers = [
             {body:[WORK,CARRY,MOVE]},
             {body:[WORK,CARRY,CARRY,MOVE]},
-            {body:[WORK,CARRY,CARRY,CARRY,MOVE]}
+            {body:[WORK,CARRY,CARRY,CARRY,MOVE]},
+            {body:[WORK,WORK,CARRY,CARRY,CARRY,MOVE]},
+            {body:[WORK,WORK,WORK,CARRY,CARRY,CARRY,MOVE]},
+            {body:[WORK,WORK,WORK,CARRY,CARRY,CARRY,CARRY,MOVE]}
         ];
 
         _.forEach(tiers, function(tier){
@@ -27,7 +30,7 @@ var roleUpgrader = {
 	    if(creep.memory.upgrading) {
             if(creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
-                creep.placeRoadUnderMe();   
+                creep.placeRoadUnderMe();
             }
         }
         else {
