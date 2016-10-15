@@ -50,14 +50,9 @@ module.exports.loop = function() {
 
 
 
-        if (spawn.room.name == 'W56S69') {
-            if(melees.length < 0) {
-              roleMelee.create(spawn, 'W56S67', 'W56S69')
-            } else if (claimers.length < 0) {
-                roleClaimer.create(spawn);
-            } else if (miners.length < 4) {
+            if (miners.length < 4) {
                 roleMiner.create(spawn);
-            } else if (harvesters.length < 2) {
+            } else if (harvesters.length < 0) {
                 roleHarvester.create(spawn);
             } else if (upgraders.length < 2) {
                 roleUpgrader.create(spawn);
@@ -66,29 +61,6 @@ module.exports.loop = function() {
             } else if (repairers.length < 1 && needsRepairCount > 0) {
                 roleRepairer.create(spawn);
             }
-            // else if (_.filter(explorers, (creep) => creep.targetSourceId == '57ef9d0b86f108ae6e60d2c0').length < 2) {
-            //     roleExplorer.create(spawn,'W56S68','W56S67','57ef9d0b86f108ae6e60d2c0');
-            // } else if (_.filter(explorers, (creep) => creep.targetSourceId == '57ef9d0b86f108ae6e60d2c2').length < 2) {
-            //     roleExplorer.create(spawn,'W56S68','W56S67','57ef9d0b86f108ae6e60d2c2');
-            // }
-        } else if (spawn.room.name == 'W56S68') {
-            if (claimers.length < 0) {
-                roleClaimer.create(spawn);
-            }
-            if (miners.length < 2) {
-                roleMiner.create(spawn);
-            } else if (harvesters.length < 3) {
-                roleHarvester.create(spawn);
-            } else if (upgraders.length < 2) {
-                roleUpgrader.create(spawn);
-            } else if (builders.length < 2 && spawn.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
-                roleBuilder.create(spawn);
-            } else if (repairers.length < 2 && needsRepairCount > 0) {
-                roleRepairer.create(spawn);
-            } else if (explorers.length < 0) {
-                roleExplorer.create(spawn);
-            }
-        }
 
         if (needsRepairCount == 0) {
             _.forEach(repairers, function(repairer) {
