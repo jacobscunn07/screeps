@@ -37,20 +37,7 @@ module.exports.loop = function() {
         }).length;
         var hostileCreepsCount = spawn.room.find(FIND_HOSTILE_CREEPS).length;
 
-
-        if(name == "Spawn1" &&
-            _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == 'W56S68').length < 1) {
-                var n = roleHarvester.create(spawn, 'W56S68');
-            }
-
-        // if(name == "Spawn1" &&
-        //     _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == 'W56S68').length < 2) {
-        //         var n = roleUpgrader.create(spawn, 'W56S68');
-        //     }
-
-
-
-            if (miners.length < 4) {
+            if (miners.length < 1) {
                 roleMiner.create(spawn);
             } else if (harvesters.length < 0) {
                 roleHarvester.create(spawn);
