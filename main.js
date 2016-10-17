@@ -37,9 +37,14 @@ module.exports.loop = function() {
         }).length;
         var hostileCreepsCount = spawn.room.find(FIND_HOSTILE_CREEPS).length;
 
-            if (miners.length < 1) {
-                roleMiner.create(spawn);
-            } else if (harvesters.length < 0) {
+            // if (melees.length < 4) {
+            //     roleMelee.create(spawn, 'W67S58', 'W67S57');
+            // } else
+            // if (miners.length < 2) {
+            //     roleMiner.create(spawn);
+            // } else
+            roleMiner.create(spawn);
+            if (harvesters.length < 2) {
                 roleHarvester.create(spawn);
             } else if (upgraders.length < 2) {
                 roleUpgrader.create(spawn);
@@ -48,6 +53,9 @@ module.exports.loop = function() {
             } else if (repairers.length < 1 && needsRepairCount > 0) {
                 roleRepairer.create(spawn);
             }
+            // else if (explorers.length < 2) {
+            //     roleExplorer.create(spawn, 'W67S57', 'W67S58', '57ef9c7e86f108ae6e60c452');
+            // }
 
         if (needsRepairCount == 0) {
             _.forEach(repairers, function(repairer) {

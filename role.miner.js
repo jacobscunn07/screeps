@@ -1,75 +1,59 @@
 var helpers = require('global.helpers');
 
-var findSourceToHarvest = function(creep) {
+var sourceAccessPoints = function(s) {
     var sources = creep.findSources();
     var name = creep.room.name;
     var mySources = [];
-    _.forEach(sources, function(s) {
-        var x = s.pos.x - 1;
-        var y = s.pos.y - 1;
-        var positions = [];
-        for (var i = 0; i < 3; i++) {
-            for (var j = 0; j < 3; j++) {
-                var pos = new RoomPosition(x, y, name);
-                var structures = pos.lookFor(LOOK_STRUCTURES);
-                var hasStructureObstacle = _.any(structures,
-                    function(structure) {
-                        return _.filter(OBSTACLE_OBJECT_TYPES,
-                            function(obstacle) {
-                                return obstacle == structure.structureType;
-                            }).length > 0;
-                    }
-                );
 
-                var terrains = pos.lookFor(LOOK_TERRAIN);
-                var hasTerrainObstacle = _.any(terrains,
-                    function(structure) {
-                        return _.filter(OBSTACLE_OBJECT_TYPES,
-                            function(obstacle) {
-                                return obstacle == structure;
-                            }).length > 0;
-                    }
-                );
+    var x = s.pos.x - 1;
+    var y = s.pos.y - 1;
+    var positions = [];
 
-                var creeps = pos.lookFor(LOOK_CREEPS);
-                var hasCreepObstacle = creeps.length > 0;
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            var pos = new RoomPosition(x, y, name);
+            var structures = pos.lookFor(LOOK_STRUCTURES);
+            var hasStructureObstacle = _.any(structures,
+                function(structure) {
+                    return _.filter(OBSTACLE_OBJECT_TYPES,
+                        function(obstacle) {
+                            return obstacle == structure.structureType;
+                        }).length > 0;
+                }
+            );
 
-                var position = {
-                    x: x,
-                    y: y,
-                    structures: structures,
-                    terrains: terrains,
-                    hasObstacle: hasStructureObstacle || hasTerrainObstacle
-                };
-                positions.push(position);
-                x++;
-            }
-            x = s.pos.x - 1;
-            y++;
+            var terrains = pos.lookFor(LOOK_TERRAIN);
+            var hasTerrainObstacle = _.any(terrains,
+                function(structure) {
+                    return _.filter(OBSTACLE_OBJECT_TYPES,
+                        function(obstacle) {
+                            return obstacle == structure;
+                        }).length > 0;
+                }
+            );
+
+            var creeps = pos.lookFor(LOOK_CREEPS);
+            var hasCreepObstacle = creeps.length > 0;
+
+            var position = {
+                x: x,
+                y: y,
+                structures: structures,
+                terrains: terrains,
+                hasObstacle: hasStructureObstacle || hasTerrainObstacle
+            };
+            positions.push(position);
+            x++;
         }
+        x = s.pos.x - 1;
+        y++;
+      }
 
-        var minersAtSpawn = _.filter(Game.creeps, function(c) {
-            return c.memory.targetSourceId == s.id
-        }).length;
-        var spacesAtSpawnAvailable = _.filter(positions, function(p) {
-            return !p.hasObstacle
-        }).length;
-        var shouldSpawn = minersAtSpawn < spacesAtSpawnAvailable
-        mySources.push({
-            source: s,
-            shouldSpawn: shouldSpawn
-        });
-    });
-    //console.log(JSON.stringify(mySources));
+      var spacesAtSourceAvailable = _.filter(positions, function(p) {
+          return !p.hasObstacle
+      }).length;
 
-    var mySourcesWithSpaces = _.filter(mySources, function(ms) {
-        return ms.shouldSpawn;
-    });
-    var sourcesWithSpaces = _.map(mySourcesWithSpaces, function(s) {
-        return s.source;
-    });
-    var source = creep.pos.findClosestByPath(sourcesWithSpaces);
-    return source;
+      return spacesAtSourceAvailable;
 };
 
 var roleMiner = {
@@ -86,17 +70,66 @@ var roleMiner = {
             body: [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]
         }];
 
-        _.forEach(tiers, function(tier) {
-            if (spawn.canCreateCreep(tier.body, undefined, {
-                    role: 'miner'
-                }) == OK) {
-                var name = spawn.createCreep(tier.body, undefined, {
-                    role: 'miner',
-                    home: spawn.room.name
-                });
-                console.log("Spawning Miner, " + name);
-            }
+        var sourcesNeedingWork = [];
+
+        _.forEach(Game.sources, function(source) {
+          var creeps = _.filter(Game.creeps, (creep) => creep.memory.targetSourceId == source.id);
+          var workCount = _.reduce(creeps, function(sum, creep) {
+              return sum + creep.getActiveBodyparts(WORK);
+          }, 0);
+          //count spaces available at source
+          var sourceAccessPoints = sourceAccessPoints(source);
+
+
+          if(workCount < 5 && sourceAccessPoints > 0) {
+            sourcesNeedingWork.push({
+              source: source,
+              worksNeeded: 5 - workCount
+            });
+          }
         });
+
+        var sourceTiers = [];
+        _.forEach(sourcesNeedingWork, function(source) {
+          var filteredTiers = _.filter(tiers, (tier) => _.reduce(tier.body, function(sum, t){ return t == WORK ? sum+1 : sum; }, 0).length <= source.worksNeeded);
+          sourceTiers.push({source: source, tiers: filteredTiers});
+        });
+
+        _.forEach(sourceTiers, function (source) {
+          var name = null;
+          _.forEach(source.tiers, function(tier) {
+            if (spawn.canCreateCreep(tier.body, undefined, {role: 'miner'}) == OK) {
+              name = spawn.createCreep(tier.body, undefined, {
+                  role: 'miner',
+                  home: spawn.room.name,
+                  targetSourceId: source.source.id
+              });
+            }
+          });
+          if(name) console.log("Spawning Miner, " + name + ", in room " + spawn.room.name);
+        });
+
+
+        //loops through sources
+          //check if each source has a total of 5 work parts on creeps
+            //continue loop if source has 5 work parts
+          //and check number of spaces available at source
+        //loop through each tier
+          //create new tier list with tiers that have <= work parts neededWorks
+        //loop through new tier list and attempt to create creeps
+
+
+        // _.forEach(tiers, function(tier) {
+        //     if (spawn.canCreateCreep(tier.body, undefined, {
+        //             role: 'miner'
+        //         }) == OK) {
+        //         var name = spawn.createCreep(tier.body, undefined, {
+        //             role: 'miner',
+        //             home: spawn.room.name
+        //         });
+        //         console.log("Spawning Miner, " + name);
+        //     }
+        // });
     },
     run: function(creep) {
         if (creep.carry.energy < creep.carryCapacity) {

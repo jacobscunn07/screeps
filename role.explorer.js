@@ -1,6 +1,8 @@
 var roleExplorer = {
     create: function(spawn, home, destination, destinationSourceId) {
         var tiers = [{
+            body: [WORK, CARRY, CARRY, MOVE, MOVE]
+        }, {
             body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
         }, {
             body: [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
@@ -40,18 +42,18 @@ var roleExplorer = {
             if (creep.room.name != creep.memory.home) {
                 creep.moveTo(creep.pos.findClosestByPath(creep.room.findExitTo(creep.memory.home)));
             } else {
-                // var container = creep.findClosestContainerThatIsNotFull();
-                // if (container && creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                //     creep.moveTo(container);
-                // } else if (!container) {
-                //     var target = creep.findClosestPlaceToDumpEnergy();
-                //     if (target && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                //         creep.moveTo(target);
-                //     }
-                // }
-                if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(creep.room.controller);
+                var container = creep.findClosestContainerThatIsNotFull();
+                if (container && creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(container);
+                } else if (!container) {
+                    var target = creep.findClosestPlaceToDumpEnergy();
+                    if (target && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(target);
+                    }
                 }
+                // if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                //     creep.moveTo(creep.room.controller);
+                // }
             }
         }
     }
