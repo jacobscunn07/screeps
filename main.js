@@ -13,14 +13,15 @@ var creepExtensions = require('extensions.creep');
 var towerExtensions = require('extensions.tower');
 var sourceExtensions = require('extensions.source');
 
-var config = require('config');
+var CreepFactory = require("factory.creep");
 
 module.exports.loop = function() {
     creepExtensions.register();
     towerExtensions.register();
     sourceExtensions.register();
 
-    config.register();
+    var creepFactory = new CreepFactory();
+    var strat = creepFactory.getStrategy();
 
     for (var name in Game.spawns) {
         var spawn = Game.spawns[name];
