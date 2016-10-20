@@ -7,28 +7,27 @@ var RepairerStrategy = require('role.repairer');
 var factory = {
     register: function() {
         class CreepFactory {
-            var self = this;
             constructor(spawn, room) {
-                self.spawn = spawn;
-                self.room = room;
-                self.rcl = Game.rooms[room].level;
-                self.miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner' && creep.memory.home == room);
-                self.harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == room);
-                self.upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == room);
-                self.repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room);
-                self.builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == room);
-                self.containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
-                self.storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
-                self.constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
-                self.energyStored = _.reduce(containers.concat(storage), function(sum, n) {
+                this.spawn = spawn;
+                this.room = room;
+                this.rcl = Game.rooms[room].level;
+                this.miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner' && creep.memory.home == room);
+                this.harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == room);
+                this.upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == room);
+                this.repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room);
+                this.builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == room);
+                this.containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
+                this.storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
+                this.constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
+                this.energyStored = _.reduce(containers.concat(storage), function(sum, n) {
                     return sum + n.store.energy;
                 }, 0);
-                self.structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
+                this.structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
             }
 
             getStrategy() {
               // Test this factory
-              return new Miner(self.spawn, self.room);
+              return new Miner(this.spawn, this.room);
 
                 // //Miner Strategy
                 // if (_.contains([1, 2], rcl) && miners.length < 2 * rcl) {
