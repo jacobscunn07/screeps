@@ -1,10 +1,9 @@
 module.exports = {
     register: function() {
         class Builder {
-            var self = this;
             constructor(spawn, room) {
-                self.spawn = spawn;
-                self.room = room;
+                this.spawn = spawn;
+                this.room = room;
             }
 
             create() {
