@@ -1,7 +1,7 @@
 var claimerBuilder = {
-    create: function(spawn) {
+    create: function(spawn, destination) {
         var tiers = [{
-            body: [CLAIM, MOVE]
+            body: [CLAIM, CLAIM, MOVE, MOVE]
         }];
 
         var body = null;
@@ -13,7 +13,7 @@ var claimerBuilder = {
             }
         });
         var name = spawn.createCreep(body, undefined, {
-            destination: 'W56S68',
+            destination: destination || spawn.room.name,
             home: spawn.room.name,
             role: 'claimer'
         });
@@ -23,7 +23,9 @@ var claimerBuilder = {
         if (creep.room.name != creep.memory.destination) {
             creep.moveTo(creep.pos.findClosestByPath(creep.room.findExitTo(creep.memory.destination)));
         } else {
-            if (creep.claimController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+            var result = creep.claimController(creep.room.controller);
+            //console.log(result);
+            if (result == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
             }
         }

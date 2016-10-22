@@ -20,11 +20,14 @@ module.exports.loop = function() {
     towerExtensions.register();
     sourceExtensions.register();
 
-    var creepFactory = new CreepFactory();
-    var strat = creepFactory.getStrategy();
+
+
 
     for (var name in Game.spawns) {
         var spawn = Game.spawns[name];
+        // var creepFactory = new CreepFactory(spawn, spawn.room.name);
+        // var strat = creepFactory.getStrategy();
+        var containers = spawn.room.find(FIND_STRUCTURES, {filter: function(s) { return s.structureType == STRUCTURE_CONTAINER}});
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == spawn.room.name);
         var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == spawn.room.name);
         var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == spawn.room.name);
@@ -42,6 +45,9 @@ module.exports.loop = function() {
         }).length;
         var hostileCreepsCount = spawn.room.find(FIND_HOSTILE_CREEPS).length;
 
+        var upgraders2 = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == 'W67S58');
+        var builders2 = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == 'W67S58');
+
             // if (melees.length < 4) {
             //     roleMelee.create(spawn, 'W67S58', 'W67S57');
             // } else
@@ -49,13 +55,25 @@ module.exports.loop = function() {
             //     roleMiner.create(spawn);
             // } else
             roleMiner.create(spawn);
-            if (harvesters.length < 2) {
+            if (harvesters.length < 2 && containers.length > 0) {
                 roleHarvester.create(spawn);
-            } else if (upgraders.length < 2) {
+            } else if (upgraders.length < 3) {
                 roleUpgrader.create(spawn);
+            }
+            // else if (upgraders2.length < 3) {
+            //     roleUpgrader.create(spawn, 'W67S58');
+            // }
+            else if (claimers.length < 0) {
+                roleClaimer.create(spawn, 'W67S58');
             } else if (builders.length < 2 && spawn.room.find(FIND_CONSTRUCTION_SITES).length > 0) {
                 roleBuilder.create(spawn);
-            } else if (repairers.length < 1 && needsRepairCount > 0) {
+            }
+            // else if (builders2.length < 2) {
+            //     roleBuilder.create(spawn, 'W67S58');
+            // }
+            else if (melees.length < 0) {
+                roleMelee.create(spawn, 'W67S58', 'W67S57', '58043ffb151b403c4c8731be');
+            } else if (repairers.length < 1 && needsRepairCount > 0 && containers.length > 0) {
                 roleRepairer.create(spawn);
             }
             // else if (explorers.length < 2) {

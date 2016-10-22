@@ -17,7 +17,7 @@ var creepFactory = class CreepFactory {
         this.containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
         this.storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
         this.constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
-        this.energyStored = _.reduce(containers.concat(storage), function(sum, n) {
+        this.energyStored = _.reduce(this.containers.concat(this.storage), function(sum, n) {
             return sum + n.store.energy;
         }, 0);
         this.structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);

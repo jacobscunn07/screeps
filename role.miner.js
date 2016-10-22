@@ -1,8 +1,8 @@
 var helpers = require('global.helpers');
 
 var sourceAccessPoints = function(s) {
-    var sources = creep.findSources();
-    var name = creep.room.name;
+    //var sources = creep.findSources();
+    var name = s.room.name;
     var mySources = [];
 
     var x = s.pos.x - 1;
@@ -58,6 +58,9 @@ var sourceAccessPoints = function(s) {
 
 var roleMiner = {
     create: function(spawn) {
+        var miners = _.filter(Game.creeps, (creep) => creep.memory.home == spawn.room.name && creep.memory.role == "miner");
+        if(spawn.room.controller.level < 3 && miners.length > 4) return;
+
         var tiers = [{
             body: [WORK, CARRY, MOVE]
         }, {
@@ -71,33 +74,41 @@ var roleMiner = {
         }];
 
         var sourcesNeedingWork = [];
-
-        _.forEach(Game.sources, function(source) {
+        _.forEach(Game.rooms[spawn.room.name].find(FIND_SOURCES), function(source) {
           var creeps = _.filter(Game.creeps, (creep) => creep.memory.targetSourceId == source.id);
           var workCount = _.reduce(creeps, function(sum, creep) {
               return sum + creep.getActiveBodyparts(WORK);
           }, 0);
           //count spaces available at source
-          var sourceAccessPoints = sourceAccessPoints(source);
+          var sourceAccessPoint = sourceAccessPoints(source);
 
-
-          if(workCount < 5 && sourceAccessPoints > 0) {
+          if(workCount < 5 && sourceAccessPoint > 0) {
             sourcesNeedingWork.push({
               source: source,
               worksNeeded: 5 - workCount
             });
           }
         });
+        //console.log(JSON.stringify(sourcesNeedingWork));
+        // var sourceTiers = [];
+        // _.forEach(sourcesNeedingWork, function(source) {
+        // //   var filteredTiers = _.filter(tiers, (tier) => _.reduce(tier.body, function(sum, t){ return t == WORK ? sum+1 : sum; }, 0).length <= source.worksNeeded);
 
-        var sourceTiers = [];
-        _.forEach(sourcesNeedingWork, function(source) {
-          var filteredTiers = _.filter(tiers, (tier) => _.reduce(tier.body, function(sum, t){ return t == WORK ? sum+1 : sum; }, 0).length <= source.worksNeeded);
-          sourceTiers.push({source: source, tiers: filteredTiers});
-        });
+        //   var filteredTiers  = [];
+        //   _.forEach(tiers, function(tier) {
+        //       var workCount = 0;
+        //       _.forEach(tier.body, function(b) {
+        //           if(b == WORK) workCount++;
+        //       });
 
-        _.forEach(sourceTiers, function (source) {
+        //   });
+
+        //   sourceTiers.push({source: source, tiers: filteredTiers});
+        // });
+//console.log(JSON.stringify(sourceTiers));
+        _.forEach(sourcesNeedingWork, function (source) {
           var name = null;
-          _.forEach(source.tiers, function(tier) {
+          _.forEach(tiers, function(tier) {
             if (spawn.canCreateCreep(tier.body, undefined, {role: 'miner'}) == OK) {
               name = spawn.createCreep(tier.body, undefined, {
                   role: 'miner',
