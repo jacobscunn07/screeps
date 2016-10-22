@@ -1,7 +1,8 @@
 var repairer = class Repairer {
-    constructor(spawn, room) {
+    constructor(spawn, room, creep) {
         this.spawn = spawn;
         this.room = room;
+        this.creep = creep;
     }
 
     create() {
@@ -28,37 +29,41 @@ var repairer = class Repairer {
                 });
             }
         });
-        if (name) console.log("Spawning Repairer, " + name + ", in room " + self.spawn.room.name);
+
+        if (name) {
+          this.creep = Game.creeps[name];
+          console.log("Spawning Repairer, " + name + ", in room " + self.spawn.room.name);
+        }
     }
 
-    run(creep) {
-        if (creep.memory.repairing && creep.carry.energy == 0) {
-            creep.memory.repairing = false;
-            creep.memory.structure = null;
+    run() {
+        if (this.creep.memory.repairing && this.creep.carry.energy == 0) {
+            this.creep.memory.repairing = false;
+            this.creep.memory.structure = null;
         }
-        if (!creep.memory.repairing && creep.carry.energy == creep.carryCapacity) {
-            creep.memory.repairing = true;
+        if (!this.creep.memory.repairing && this.creep.carry.energy == this.creep.carryCapacity) {
+            this.creep.memory.repairing = true;
         }
 
-        if (creep.memory.repairing) {
-            if (creep.memory.structure) {
-                var structure = Game.getObjectById(creep.memory.structure);
-                if (creep.repair(structure) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure);
+        if (this.creep.memory.repairing) {
+            if (this.creep.memory.structure) {
+                var structure = Game.getObjectById(this.creep.memory.structure);
+                if (this.creep.repair(structure) == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(structure);
                 }
 
                 if (structure.hits == structure.hitsMax) {
-                    creep.memory.structure = null;
+                    this.creep.memory.structure = null;
                 }
             } else {
-                var structure = creep.findWeakestStructureOfType([STRUCTURE_CONTAINER, STRUCTURE_ROAD, STRUCTURE_TOWER]);
-                structure = structure || creep.findWeakestStructureOfType([STRUCTURE_WALL, STRUCTURE_RAMPART]);
-                creep.memory.structure = structure.id;
+                var structure = this.creep.findWeakestStructureOfType([STRUCTURE_CONTAINER, STRUCTURE_ROAD, STRUCTURE_TOWER]);
+                structure = structure || this.creep.findWeakestStructureOfType([STRUCTURE_WALL, STRUCTURE_RAMPART]);
+                this.creep.memory.structure = structure.id;
             }
         } else {
-            var container = creep.findClosestContainerWithEnergy();
-            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container);
+            var container = this.creep.findClosestContainerWithEnergy();
+            if (this.creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(container);
             }
         }
     }

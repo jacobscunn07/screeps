@@ -1,7 +1,8 @@
 var builder = class Builder {
-    constructor(spawn, room) {
+    constructor(spawn, room, creep) {
         this.spawn = spawn;
         this.room = room;
+        this.creep = creep;
     }
 
     create() {
@@ -28,38 +29,40 @@ var builder = class Builder {
                 });
             }
         });
-        if (name) console.log("Spawning Miner, " + name + ", in room " + self.spawn.room.name);
-
+        if (name) {
+          this.creep = Game.creeps[name];
+          console.log("Spawning Miner, " + name + ", in room " + self.spawn.room.name);
+        }
     }
 
-    run(creep) {
-        if (creep.room.name != creep.memory.home) {
-            creep.moveTo(creep.pos.findClosestByPath(creep.room.findExitTo(creep.memory.home)));
+    run() {
+        if (this.creep.room.name != this.creep.memory.home) {
+            this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.home)));
         } else {
-            if (creep.memory.building && creep.carry.energy == 0) {
-                creep.memory.building = false;
+            if (this.creep.memory.building && this.creep.carry.energy == 0) {
+                this.creep.memory.building = false;
             }
-            if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-                creep.memory.building = true;
+            if (!this.creep.memory.building && this.creep.carry.energy == this.creep.carryCapacity) {
+                this.creep.memory.building = true;
             }
 
-            if (creep.memory.building) {
-                var targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+            if (this.creep.memory.building) {
+                var targets = this.creep.room.find(FIND_CONSTRUCTION_SITES);
                 if (targets.length) {
-                    if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(targets[0]);
+                    if (this.creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                        this.creep.moveTo(targets[0]);
                     }
                 }
             } else {
-                var container = creep.findClosestContainerWithEnergy();
-                if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container);
+                var container = this.creep.findClosestContainerWithEnergy();
+                if (this.creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(container);
                 }
 
                 if (!container) {
-                    var source = creep.findClosestSource();
-                    if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(source);
+                    var source = this.creep.findClosestSource();
+                    if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                        this.creep.moveTo(source);
                     }
                 }
             }

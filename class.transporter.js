@@ -1,7 +1,8 @@
 var transporter = class Transporter {
-    constructor(spawn, room) {
+    constructor(spawn, room, creep) {
         this.spawn = spawn;
         this.room = room;
+        this.creep = creep;
     }
 
     create() {
@@ -24,33 +25,36 @@ var transporter = class Transporter {
                 });
             }
         });
-        if (name) console.log("Spawning Transporter, " + name + ", in room " + self.spawn.room.name);
+        if (name) {
+          this.creep = Game.creeps[name];
+          console.log("Spawning Transporter, " + name + ", in room " + self.spawn.room.name);
+        }
     }
 
-    run(creep) {
-        if (creep.carry.energy > 0) {
-            var target = creep.findClosestPlaceToDumpEnergy();
-            if (target && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(target);
+    run() {
+        if (this.creep.carry.energy > 0) {
+            var target = this.creep.findClosestPlaceToDumpEnergy();
+            if (target && this.creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(target);
             }
-        } else if (creep.carry.energy == 0) {
-            if (creep.room.name != creep.memory.home) {
-                creep.moveTo(creep.pos.findClosestByPath(creep.room.findExitTo(creep.memory.home)));
+        } else if (this.creep.carry.energy == 0) {
+            if (this.creep.room.name != this.creep.memory.home) {
+                this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.home)));
             } else {
-                var energy = creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
-                if (energy && creep.targetIsInRange(energy, 4)) {
-                    if (creep.pickup(energy) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(energy);
+                var energy = this.creep.pos.findClosestByRange(FIND_DROPPED_ENERGY);
+                if (energy && this.creep.targetIsInRange(energy, 4)) {
+                    if (this.creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+                        this.creep.moveTo(energy);
                     }
                 } else {
-                    var container = creep.findClosestContainerWithEnergy();
-                    if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                        creep.moveTo(container);
+                    var container = this.creep.findClosestContainerWithEnergy();
+                    if (this.creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                        this.creep.moveTo(container);
                     }
                 }
             }
         } else {
-            roleUpgrader.run(creep);
+            roleUpgrader.run(this.creep);
         }
     }
 };

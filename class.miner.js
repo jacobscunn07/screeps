@@ -55,9 +55,10 @@ var sourceAccessPoints = function(s) {
 };
 
 var miner = class Miner {
-    constructor(spawn, room) {
+    constructor(spawn, room, creep) {
         this.spawn = spawn;
         this.room = room;
+        this.creep = creep;
     }
 
     create() {
@@ -115,31 +116,35 @@ var miner = class Miner {
                     });
                 }
             });
-            if (name) console.log("Spawning Miner, " + name + ", in room " + self.spawn.room.name);
+
+            if (name) {
+              this.creep = Game.creeps[name];
+              console.log("Spawning Miner, " + name + ", in room " + self.spawn.room.name);
+            }
         });
     }
 
-    run(creep) {
-        if (creep.carry.energy < creep.carryCapacity) {
+    run() {
+        if (this.creep.carry.energy < this.creep.carryCapacity) {
             var source = null;
-            if (creep.memory.targetSourceId) {
-                source = Game.getObjectById(creep.memory.targetSourceId);
+            if (this.creep.memory.targetSourceId) {
+                source = Game.getObjectById(this.creep.memory.targetSourceId);
             } else {
                 source = findSourceToHarvest(creep);
-                creep.memory.targetSourceId = source ? source.id : null;
+                this.creep.memory.targetSourceId = source ? source.id : null;
             }
 
-            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(source);
+            if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(source);
             }
         } else {
-            var container = creep.findClosestContainerThatIsNotFull();
-            if (container && creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(container);
+            var container = this.creep.findClosestContainerThatIsNotFull();
+            if (container && this.creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(container);
             } else if (!container) {
-                var target = creep.findClosestPlaceToDumpEnergy();
-                if (target && creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target);
+                var target = this.creep.findClosestPlaceToDumpEnergy();
+                if (target && this.creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(target);
                 }
             }
         }
