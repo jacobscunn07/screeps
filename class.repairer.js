@@ -1,11 +1,9 @@
 var repairer = class Repairer {
-    constructor(spawn, room, creep) {
-        this.spawn = spawn;
-        this.room = room;
+    constructor(creep) {
         this.creep = creep;
     }
 
-    create() {
+    create(spawn, room) {
         var tiers = [{
             body: [WORK, CARRY, MOVE, MOVE]
         }, {
@@ -25,7 +23,7 @@ var repairer = class Repairer {
                 }) == OK) {
                 name = spawn.createCreep(tier.body, undefined, {
                     role: 'repairer',
-                    home: self.spawn.room.name
+                    home: spawn.room.name
                 });
             }
         });

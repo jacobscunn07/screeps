@@ -1,11 +1,9 @@
 var transporter = class Transporter {
-    constructor(spawn, room, creep) {
-        this.spawn = spawn;
-        this.room = room;
+    constructor(creep) {
         this.creep = creep;
     }
 
-    create() {
+    create(spawn, room) {
         var tiers = [{
             body: [CARRY, CARRY, MOVE, MOVE]
         }, {
@@ -21,7 +19,7 @@ var transporter = class Transporter {
                 }) == OK) {
                 name = self.spawn.createCreep(tier.body, undefined, {
                     role: 'transporter',
-                    home: self.room || self.spawn.room.name
+                    home: room || self.spawn.room.name
                 });
             }
         });

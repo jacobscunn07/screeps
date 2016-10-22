@@ -1,11 +1,9 @@
 var upgrader = class Upgrader {
-    constructor(spawn, room, creep) {
-        this.spawn = spawn;
-        this.room = room;
+    constructor(creep) {
         this.creep = creep;
     }
 
-    create() {
+    create(spawn, room) {
         var tiers = [{
             body: [WORK, CARRY, MOVE, MOVE]
         }, {
