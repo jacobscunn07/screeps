@@ -45,16 +45,26 @@ var creepFactory = class CreepFactory {
       }, 0);
       var structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
 
+
+      var sources = [];
+      _.forEach(Game.rooms[room].find(FIND_SOURCES), function(source) {
+        var workCount = _.reduce(creeps, function(sum, creep) {
+            return sum + creep.getActiveBodyparts(WORK);
+        }, 0);
+        var accessPoints = sourceAccessPoints(source);
+
+        if(workCount < 5 && accessPoints > 0) {
+          sources.push(source);
+        }
+      });
+
       //Miner Strategy
       if (_.contains([1, 2], rcl) && miners.length < 2 * rcl) {
           //modify miner strategy to take what source to set as target source id
-          return new Miner();
-      } else if(rcl > 2 && miners.length < 5) {
-          return new Miner();
+          return new Miner(spawn, room, _.first(sources));
+      } else if(rcl > 2 && sources.length > 0 && miners.length < 5) {
+          return new Miner(spawn, room, _.first(sources));
       }
-    //   else if () /* else if each source does not have 5 work body parts && source has access point */ {
-    //       return new Miner();
-    //   }
 
       //Transporter Strategy
       if ((transporters.length + harvesters.length) < 2 && rcl >= 2 && containers.length > 0) {
@@ -81,6 +91,62 @@ var creepFactory = class CreepFactory {
           return new Repairer();
       }
     }
-}
+};
+
+var sourceAccessPoints = function(s) {
+    var name = s.room.name;
+    var mySources = [];
+
+    var x = s.pos.x - 1;
+    var y = s.pos.y - 1;
+    var positions = [];
+
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            var pos = new RoomPosition(x, y, name);
+            var structures = pos.lookFor(LOOK_STRUCTURES);
+            var hasStructureObstacle = _.any(structures,
+                function(structure) {
+                    return _.filter(OBSTACLE_OBJECT_TYPES,
+                        function(obstacle) {
+                            return obstacle == structure.structureType;
+                        }).length > 0;
+                }
+            );
+
+            var terrains = pos.lookFor(LOOK_TERRAIN);
+            var hasTerrainObstacle = _.any(terrains,
+                function(structure) {
+                    return _.filter(OBSTACLE_OBJECT_TYPES,
+                        function(obstacle) {
+                            return obstacle == structure;
+                        }).length > 0;
+                }
+            );
+
+            var creeps = pos.lookFor(LOOK_CREEPS);
+            var hasCreepObstacle = creeps.length > 0;
+
+            var position = {
+                x: x,
+                y: y,
+                structures: structures,
+                terrains: terrains,
+                hasObstacle: hasStructureObstacle || hasTerrainObstacle
+            };
+            positions.push(position);
+            x++;
+        }
+        x = s.pos.x - 1;
+        y++;
+      }
+
+      var spacesAtSourceAvailable = _.filter(positions, function(p) {
+          return !p.hasObstacle
+      }).length;
+
+      return spacesAtSourceAvailable;
+};
+
 
 module.exports = creepFactory;

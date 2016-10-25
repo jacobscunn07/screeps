@@ -59,7 +59,7 @@ var miner = class Miner {
         this.creep = creep;
     }
 
-    create(spawn, room) {
+    create(spawn, room, source) {
         var tiers = [{
             body: [WORK, CARRY, MOVE]
         }, {
@@ -72,65 +72,28 @@ var miner = class Miner {
             body: [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]
         }];
 
-        var sourcesNeedingWork = [];
-
-        _.forEach(Game.sources, function(source) {
-            var creeps = _.filter(Game.creeps, (creep) => creep.memory.targetSourceId == source.id);
-            var workCount = _.reduce(creeps, function(sum, creep) {
-                return sum + creep.getActiveBodyparts(WORK);
-            }, 0);
-            var sourceAccessPoints = sourceAccessPoints(source);
-
-
-            if (workCount < 5 && sourceAccessPoints > 0) {
-                sourcesNeedingWork.push({
-                    source: source,
-                    worksNeeded: 5 - workCount
+        var name = null;
+        _.forEach(tiers, function(tier) {
+            if (spawn.canCreateCreep(tier.body, undefined, {
+                    role: 'miner'
+                }) == OK) {
+                name = spawn.createCreep(tier.body, undefined, {
+                    role: 'miner',
+                    home: room || spawn.room.name,
+                    targetSourceId: source.id
                 });
             }
         });
 
-        // var sourceTiers = [];
-        // _.forEach(sourcesNeedingWork, function(source) {
-        //     var filteredTiers = _.filter(tiers, (tier) => _.reduce(tier.body, function(sum, t) {
-        //         return t == WORK ? sum + 1 : sum;
-        //     }, 0).length <= source.worksNeeded);
-        //     sourceTiers.push({
-        //         source: source,
-        //         tiers: filteredTiers
-        //     });
-        // });
-
-        _.forEach(sourcesNeedingWork, function(source) {
-            var name = null;
-            _.forEach(tiers, function(tier) {
-                if (spawn.canCreateCreep(tier.body, undefined, {
-                        role: 'miner'
-                    }) == OK) {
-                    name = spawn.createCreep(tier.body, undefined, {
-                        role: 'miner',
-                        home: room || self.spawn.room.name,
-                        targetSourceId: source.id
-                    });
-                }
-            });
-
-            if (name) {
-              this.creep = Game.creeps[name];
-              console.log("Spawning Miner, " + name + ", in room " + self.spawn.room.name);
-            }
-        });
+        if (name) {
+          this.creep = Game.creeps[name];
+          console.log("Spawning Miner, " + name + ", in room " + spawn.room.name);
+        }
     }
 
     run() {
         if (this.creep.carry.energy < this.creep.carryCapacity) {
-            var source = null;
-            if (this.creep.memory.targetSourceId) {
-                source = Game.getObjectById(this.creep.memory.targetSourceId);
-            } else {
-                source = findSourceToHarvest(creep);
-                this.creep.memory.targetSourceId = source ? source.id : null;
-            }
+            var source = Game.getObjectById(this.creep.memory.targetSourceId);
 
             if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
                 this.creep.moveTo(source);
