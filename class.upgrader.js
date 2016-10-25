@@ -23,13 +23,13 @@ var upgrader = class Upgrader {
                 }) == OK) {
                 name = spawn.createCreep(tier.body, undefined, {
                     role: 'upgrader',
-                    home: room || self.spawn.room.name
+                    home: room || spawn.room.name
                 });
             }
         });
         if (name) {
           this.creep = Game.creeps[name];
-          console.log("Spawning Upgrader, " + name + ", in room " + self.spawn.room.name);
+          console.log("Spawning Upgrader, " + name + ", in room " + spawn.room.name);
         }
     }
 

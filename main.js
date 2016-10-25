@@ -10,6 +10,7 @@ module.exports.loop = function() {
     towerExtensions.register();
     sourceExtensions.register();
 
+    var towers = _.filter(Game.structures, (s) => s.structureType == STRUCTURE_TOWER);
     var creepFactory = new CreepFactory();
 
     for (var name in Game.spawns) {
@@ -20,29 +21,31 @@ module.exports.loop = function() {
 
     for (var name in Game.creeps) {
         var creep = creepFactory.getCreepToRun(Game.creeps[name]);
-        creep.run();
-
-        if(hostileCreepsCount > 0) {
-            var max = 3;
-            var min = 1;
-            var num = Math.floor(Math.random() * (max - min + 1)) + min;
-
-            switch(num) {
-                case 1:
-                    msg = "Ayuda me!";
-                    break;
-                case 2:
-                    msg = "Help!";
-                    break;
-                case 3:
-                    msg = "Invaders!"
-                    break;
-            }
-
-            if(Math.floor(Math.random()*10) % 3 == 0) {
-                creep.say(msg, true);
-            }
+        if(creep) {
+            creep.run();
         }
+
+        // if(hostileCreepsCount > 0) {
+        //     var max = 3;
+        //     var min = 1;
+        //     var num = Math.floor(Math.random() * (max - min + 1)) + min;
+
+        //     switch(num) {
+        //         case 1:
+        //             msg = "Ayuda me!";
+        //             break;
+        //         case 2:
+        //             msg = "Help!";
+        //             break;
+        //         case 3:
+        //             msg = "Invaders!"
+        //             break;
+        //     }
+
+        //     if(Math.floor(Math.random()*10) % 3 == 0) {
+        //         creep.say(msg, true);
+        //     }
+        // }
     }
 
     _.forEach(towers, function(tower) {

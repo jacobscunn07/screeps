@@ -17,7 +17,7 @@ var transporter = class Transporter {
             if (spawn.canCreateCreep(tier.body, undefined, {
                     role: 'transporter'
                 }) == OK) {
-                name = self.spawn.createCreep(tier.body, undefined, {
+                name = spawn.createCreep(tier.body, undefined, {
                     role: 'transporter',
                     home: room || self.spawn.room.name
                 });
@@ -25,7 +25,7 @@ var transporter = class Transporter {
         });
         if (name) {
           this.creep = Game.creeps[name];
-          console.log("Spawning Transporter, " + name + ", in room " + self.spawn.room.name);
+          console.log("Spawning Transporter, " + name + ", in room " + spawn.room.name);
         }
     }
 

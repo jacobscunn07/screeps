@@ -13,6 +13,7 @@ var creepFactory = class CreepFactory {
         case "miner":
           return new Miner(creep);
           break;
+        case "harvester":
         case "transporter":
           return new Transporter(creep);
           break;
@@ -22,32 +23,38 @@ var creepFactory = class CreepFactory {
         case "builder":
           return new Builder(creep);
           break;
+        case "upgrader":
+          return new Upgrader(creep);
+          break;
       }
     }
 
     getCreepToCreate(spawn, room) {
-      rcl = Game.rooms[room].level;
-      miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner' && creep.memory.home == room);
-      transporters = _.filter(Game.creeps, (creep) => creep.memory.role == 'transporter' && creep.memory.home == room);
-      harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == room);
-      upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == room);
-      repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room);
-      builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == room);
-      containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
-      storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
-      constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
-      energyStored = _.reduce(containers.concat(storage), function(sum, n) {
+      var rcl = Game.rooms[room].level;
+      var miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner' && creep.memory.home == room);
+      var transporters = _.filter(Game.creeps, (creep) => creep.memory.role == 'transporter' && creep.memory.home == room);
+      var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == room);
+      var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == room);
+      var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room);
+      var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == room);
+      var containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
+      var storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
+      var constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
+      var energyStored = _.reduce(containers, function(sum, n) {
           return sum + n.store.energy;
       }, 0);
-      structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
+      var structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
 
       //Miner Strategy
       if (_.contains([1, 2], rcl) && miners.length < 2 * rcl) {
           //modify miner strategy to take what source to set as target source id
           return new Miner();
-      } else if () /* else if each source does not have 5 work body parts && source has access point */ {
+      } else if(rcl > 2 && miners.length < 5) {
           return new Miner();
       }
+    //   else if () /* else if each source does not have 5 work body parts && source has access point */ {
+    //       return new Miner();
+    //   }
 
       //Transporter Strategy
       if ((transporters.length + harvesters.length) < 2 && rcl >= 2 && containers.length > 0) {
@@ -59,7 +66,7 @@ var creepFactory = class CreepFactory {
       //Upgrader Strategy
       if (upgraders.length < 2) {
           return new Upgrader();
-      } else if (energyStored >= 1250 && (energyStore / 1250) >= upgraders.length && upgraders.length <= 5) {
+      } else if (energyStored >= 1250 && (energyStored / 1250) >= upgraders.length && upgraders.length <= 5) {
           return new Upgrader();
       }
 
