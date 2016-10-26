@@ -30,7 +30,7 @@ var creepFactory = class CreepFactory {
     }
 
     getCreepToCreate(spawn, room) {
-      var rcl = Game.rooms[room].level;
+      var rcl = Game.rooms[room].controller.level;
       var miners = _.filter(Game.creeps, (creep) => creep.memory.role == 'miner' && creep.memory.home == room);
       var transporters = _.filter(Game.creeps, (creep) => creep.memory.role == 'transporter' && creep.memory.home == room);
       var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == room);
@@ -45,12 +45,12 @@ var creepFactory = class CreepFactory {
       }, 0);
       var structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
 
-
       var sources = [];
       _.forEach(Game.rooms[room].find(FIND_SOURCES), function(source) {
-        var workCount = _.reduce(creeps, function(sum, creep) {
+          var srcMiners = _.filter(miners, (m) => m.memory.targetSourceId == source.id);
+          var workCount = _.reduce(srcMiners, function(sum, creep) {
             return sum + creep.getActiveBodyparts(WORK);
-        }, 0);
+          }, 0);
         var accessPoints = sourceAccessPoints(source);
 
         if(workCount < 5 && accessPoints > 0) {
@@ -58,12 +58,13 @@ var creepFactory = class CreepFactory {
         }
       });
 
+
       //Miner Strategy
+      var src = _.first(sources);
       if (_.contains([1, 2], rcl) && miners.length < 2 * rcl) {
-          //modify miner strategy to take what source to set as target source id
-          return new Miner(spawn, room, _.first(sources));
-      } else if(rcl > 2 && sources.length > 0 && miners.length < 5) {
-          return new Miner(spawn, room, _.first(sources));
+          return new Miner(null, src);
+      } else if(rcl > 2 && src) {
+          return new Miner(null, src);
       }
 
       //Transporter Strategy

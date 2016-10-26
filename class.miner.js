@@ -55,11 +55,12 @@ var sourceAccessPoints = function(s) {
 };
 
 var miner = class Miner {
-    constructor(creep) {
+    constructor(creep, source) {
         this.creep = creep;
+        this.source = source;
     }
 
-    create(spawn, room, source) {
+    create(spawn, room) {
         var tiers = [{
             body: [WORK, CARRY, MOVE]
         }, {
@@ -72,15 +73,17 @@ var miner = class Miner {
             body: [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]
         }];
 
+    var src = this.source;
         var name = null;
         _.forEach(tiers, function(tier) {
             if (spawn.canCreateCreep(tier.body, undefined, {
                     role: 'miner'
                 }) == OK) {
+
                 name = spawn.createCreep(tier.body, undefined, {
                     role: 'miner',
                     home: room || spawn.room.name,
-                    targetSourceId: source.id
+                    targetSourceId: src.id
                 });
             }
         });
