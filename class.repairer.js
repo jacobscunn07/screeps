@@ -30,7 +30,7 @@ var repairer = class Repairer {
 
         if (name) {
           this.creep = Game.creeps[name];
-          console.log("Spawning Repairer, " + name + ", in room " + self.spawn.room.name);
+          console.log("Spawning Repairer, " + name + ", in room " + spawn.room.name);
         }
     }
 

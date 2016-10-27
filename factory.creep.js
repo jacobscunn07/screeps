@@ -40,7 +40,7 @@ var creepFactory = class CreepFactory {
       var containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
       var storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
       var constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
-      var energyStored = _.reduce(containers, function(sum, n) {
+      var energyStored = _.reduce(containers.concat(storage), function(sum, n) {
           return sum + n.store.energy;
       }, 0);
       var structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
@@ -77,7 +77,7 @@ var creepFactory = class CreepFactory {
       //Upgrader Strategy
       if (upgraders.length < 2) {
           return new Upgrader();
-      } else if (energyStored >= 1250 && (energyStored / 1250) >= upgraders.length && upgraders.length <= 5) {
+      } else if (energyStored >= 1250 && (energyStored / 1250) >= upgraders.length && upgraders.length < 5) {
           return new Upgrader();
       }
 
@@ -88,7 +88,7 @@ var creepFactory = class CreepFactory {
       }
 
       //Repairer Strategy
-      if (structuresNeedingRepair > 0 && (structuresNeedingRepair / 10) >= repairers.length) {
+      if (structuresNeedingRepair.length > 0 && Math.ceil(structuresNeedingRepair.length / 40) >= repairers.length) {
           return new Repairer();
       }
     }

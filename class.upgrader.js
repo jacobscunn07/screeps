@@ -49,7 +49,14 @@ var upgrader = class Upgrader {
                     this.creep.moveTo(this.creep.room.controller);
                 }
             } else {
-                var container = this.creep.findClosestContainerWithEnergy();
+                //console.log(JSON.stringify(this.creep.getStorage()));
+                var container = this.creep.pos.findClosestByPath(Game.structures, {
+                    filter: function(s){
+                        return _.contains([STRUCTURE_STORAGE, STRUCTURE_CONTAINER], s.structureType) && s.store.energy > 0
+                    }
+                })
+
+                /*this.creep.findClosestContainerWithEnergy() || this.creep.getStorage();*/
                 if (this.creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     this.creep.moveTo(container);
                 } else if (!container) {

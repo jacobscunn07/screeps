@@ -4,6 +4,14 @@ var creepExtensions = {
             return this.pos.findClosestByPath(FIND_MY_SPAWNS);
         };
 
+        Creep.prototype.getStorage = function() {
+            return this.pos.findClosestByPath(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType == STRUCTURE_STORAGE && structure.store.energy < structure.storeCapacity);
+                }
+            });
+        };
+
         Creep.prototype.findClosestPlaceToDumpEnergy = function() {
             var priority1 = this.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
