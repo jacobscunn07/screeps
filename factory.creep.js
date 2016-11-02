@@ -43,7 +43,7 @@ var creepFactory = class CreepFactory {
       var energyStored = _.reduce(containers.concat(storage), function(sum, n) {
           return sum + n.store.energy;
       }, 0);
-      var structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7);
+      var structuresNeedingRepair = _.filter(Game.rooms[room].find(FIND_STRUCTURES), (s) => s.hits < s.hitsMax * .7 && s.hits < 100000);
 
       var sources = [];
       _.forEach(Game.rooms[room].find(FIND_SOURCES), function(source) {
@@ -58,6 +58,18 @@ var creepFactory = class CreepFactory {
         }
       });
 
+    //   var extractor = _.first(Game.rooms[room].find(FIND_MY_STRUCTURES, { filter: function(s) { return s.structureType == STRUCTURE_EXTRACTOR }}));
+    //   if(extractor) {
+    //       var extMiners = _.filter(miners, (m) => m.memory.targetSourceId == extractor.id);
+    //       var workCount =  _.reduce(extMiners, function(sum, creep) {
+    //         return sum + creep.getActiveBodyparts(WORK);
+    //       }, 0);
+    //       var extAccessPoints = sourceAccessPoints(extractor);
+
+    //       if(workCount < 5 && extAccessPoints > 0) {
+    //           sources.push(extractor);
+    //       }
+    //   }
 
       //Miner Strategy
       var src = _.first(sources);
@@ -77,12 +89,12 @@ var creepFactory = class CreepFactory {
       //Upgrader Strategy
       if (upgraders.length < 2) {
           return new Upgrader();
-      } else if (energyStored >= 1250 && (energyStored / 1250) >= upgraders.length && upgraders.length < 5) {
+      } else if (energyStored >= 1250 && (energyStored / 200000) >= upgraders.length && upgraders.length < 5) {
           return new Upgrader();
       }
 
       //Builder Strategy
-      if (constructionSites.length > 0 && (constructionSites.length / 10) >= builders.length) {
+      if (constructionSites.length > 0 && Math.ceil(constructionSites.length / 30) >= builders.length) {
           //builders should repair structures if the structure they build needs repairing (ie ramparts && walls)
           return new Builder();
       }

@@ -95,12 +95,27 @@ var miner = class Miner {
     }
 
     run() {
-        if (this.creep.carry.energy < this.creep.carryCapacity) {
+        if ((this.creep.carry.energy) < this.creep.carryCapacity) {
             var source = Game.getObjectById(this.creep.memory.targetSourceId);
 
-            if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(source);
+            if(this.creep.name == "Alyssa") console.log(JSON.stringify(this.creep));
+
+            if(source.structureType == STRUCTURE_EXTRACTOR) {
+                //console.log(JSON.stringify(source));
+                var result = this.creep.withdraw(source, RESOURCE_LEMERGIUM);
+                //console.log(this.creep.name + " result: " + result)
+                //console.log(this.creep.name);
+                if (result == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(source);
+                }
+            } else {
+                var result = this.creep.harvest(source);
+                //console.log(this.creep.name + " result: " + result)
+                if (result == ERR_NOT_IN_RANGE) {
+                    this.creep.moveTo(source);
+                }
             }
+
         } else {
             var container = this.creep.findClosestContainerThatIsNotFull();
             if (container && this.creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
