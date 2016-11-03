@@ -49,7 +49,7 @@ var agitator = class Agitator {
           this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.destination)));
         }
       } else if(this.creep.room.name == this.creep.memory.destination) {
-        if(this.creep.hits >= this.creep.hits*.8) {
+        if(this.creep.hits >= this.creep.hitsMax*.9) {
           this.creep.moveTo(this.creep.room.controller);
         } else {
           this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.home)));

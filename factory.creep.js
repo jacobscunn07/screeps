@@ -4,6 +4,7 @@ var Repairer = require("class.repairer");
 var Transporter = require("class.transporter");
 var Upgrader = require("class.upgrader");
 var Agitator = require("class.agitator");
+var Melee = require("class.melee");
 
 var creepFactory = class CreepFactory {
     constructor() {
@@ -42,6 +43,7 @@ var creepFactory = class CreepFactory {
       var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room);
       var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == room);
       var agitators = _.filter(Game.creeps, (creep) => creep.memory.role == 'agitator' && creep.memory.home == room);
+      var melees = _.filter(Game.creeps, (creep) => creep.memory.role == 'melee' && creep.memory.home == room);
       var containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
       var storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
       var constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
@@ -108,10 +110,14 @@ var creepFactory = class CreepFactory {
       if (structuresNeedingRepair.length > 0 && Math.ceil(structuresNeedingRepair.length / 40) >= repairers.length) {
           return new Repairer();
       }
-      
+
       for(var name in Game.flags) {
         var flag = Game.flags[name];
         switch(flag.color) {
+          case 1: // red
+            if(_.filter(melees, (creep) => creep.memory.destination == flag.pos.roomName).length < 2)
+              return new Melee({home: 'W67S58', destination: flag.pos.roomName});
+          break;
           case 6: // Yellow
             if(_.filter(agitators, (creep) => creep.memory.destination == flag.pos.roomName).length < 2)
               return new Agitator({home: 'W67S58', destination: flag.pos.roomName});
