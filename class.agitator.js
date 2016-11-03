@@ -1,22 +1,18 @@
 var agitator = class Agitator {
-    constructor(creep) {
-        this.creep = creep;
+    constructor(obj) {
+        this.creep = obj.creep;
+        this.home = obj.home;
+        this.destination = obj.destination;
     }
 
-    create(spawn, home, destination) {
+    create(spawn) {
         var tiers = [{
-            body: [WORK, CARRY, MOVE, MOVE]
-        }, {
-            body: [WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE]
-        }, {
-            body: [WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE]
-        }, {
-            body: [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
-        }, {
-            body: [WORK, WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE]
+            body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE]
         }];
 
         var name = null;
+        var home = this.home;
+        var destination = this.destination;
         _.forEach(tiers, function(tier) {
             if (spawn.canCreateCreep(tier.body, undefined, {
                     role: 'agitator'

@@ -4,6 +4,7 @@ var towerExtensions = require('extensions.tower');
 var sourceExtensions = require('extensions.source');
 
 var CreepFactory = require("factory.creep");
+var Agitator = require("class.agitator");
 
 module.exports.loop = function() {
     creepExtensions.register();

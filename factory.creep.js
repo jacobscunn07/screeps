@@ -3,6 +3,7 @@ var Miner = require("class.miner");
 var Repairer = require("class.repairer");
 var Transporter = require("class.transporter");
 var Upgrader = require("class.upgrader");
+var Agitator = require("class.agitator");
 
 var creepFactory = class CreepFactory {
     constructor() {
@@ -26,6 +27,9 @@ var creepFactory = class CreepFactory {
         case "upgrader":
           return new Upgrader(creep);
           break;
+        case "agitator":
+          return new Agitator({creep: creep, home: creep.memory.home, destination: creep.memory.destination});
+          break;
       }
     }
 
@@ -37,6 +41,7 @@ var creepFactory = class CreepFactory {
       var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader' && creep.memory.home == room);
       var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room);
       var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder' && creep.memory.home == room);
+      var agitators = _.filter(Game.creeps, (creep) => creep.memory.role == 'agitator' && creep.memory.home == room);
       var containers = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_CONTAINER);
       var storage = _.filter(Game.rooms[room].find(FIND_STRUCTURES), s => s.structureType == STRUCTURE_STORAGE);
       var constructionSites = Game.rooms[room].find(FIND_CONSTRUCTION_SITES);
@@ -102,6 +107,16 @@ var creepFactory = class CreepFactory {
       //Repairer Strategy
       if (structuresNeedingRepair.length > 0 && Math.ceil(structuresNeedingRepair.length / 40) >= repairers.length) {
           return new Repairer();
+      }
+
+      for(var name in Game.flags) {
+        var flag = Game.flags[name];
+        switch(flag.color) {
+          case 6: // Yellow
+            if(_.filter(agitators, (creep) => creep.memory.destination == flag.pos.roomName).length < 2)
+              return new Agitator({home: spawn.room.name, destination: flag.pos.roomName});
+          break;
+        }
       }
     }
 };
