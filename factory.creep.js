@@ -108,13 +108,13 @@ var creepFactory = class CreepFactory {
       if (structuresNeedingRepair.length > 0 && Math.ceil(structuresNeedingRepair.length / 40) >= repairers.length) {
           return new Repairer();
       }
-
+      
       for(var name in Game.flags) {
         var flag = Game.flags[name];
         switch(flag.color) {
           case 6: // Yellow
             if(_.filter(agitators, (creep) => creep.memory.destination == flag.pos.roomName).length < 2)
-              return new Agitator({home: spawn.room.name, destination: flag.pos.roomName});
+              return new Agitator({home: 'W67S58', destination: flag.pos.roomName});
           break;
         }
       }

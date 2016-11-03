@@ -7,7 +7,7 @@ var agitator = class Agitator {
 
     create(spawn) {
         var tiers = [{
-            body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE]
+            body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, HEAL, MOVE]
         }];
 
         var name = null;
@@ -32,11 +32,38 @@ var agitator = class Agitator {
     }
 
     run() {
-      if (this.creep.room.name != this.creep.memory.home) {
+      //if in destination
+        //if health > 80%
+          //move toward controller
+        //else go back home
+      //if in home
+        //if health not max
+          //heal
+        //else go to destination
+
+
+      if(this.creep.room.name == this.creep.memory.home) {
+        if(this.creep.hits < this.creep.hitsMax) {
+          this.creep.heal(this.creep);
+        } else {
+          this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.destination)));
+        }
+      } else if(this.creep.room.name == this.creep.memory.destination) {
+        if(this.creep.hits >= this.creep.hits*.8) {
+          this.creep.moveTo(this.creep.room.controller);
+        } else {
           this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.home)));
-      } else if(this.creep.room.name != this.creep.memory.destination) {
+        }
+      } else {
         this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.destination)));
       }
+
+
+      // if (this.creep.room.name != this.creep.memory.home) {
+      //     this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.home)));
+      // } else if(this.creep.room.name != this.creep.memory.destination) {
+      //   this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.destination)));
+      // }
     }
 };
 module.exports = agitator;
