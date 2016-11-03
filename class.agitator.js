@@ -7,7 +7,7 @@ var agitator = class Agitator {
 
     create(spawn) {
         var tiers = [{
-            body: [TOUGH, TOUGH, TOUGH, MOVE, MOVE, HEAL, MOVE]
+            body: [TOUGH, TOUGH, TOUGH, TOUGH, MOVE, MOVE, MOVE, MOVE, HEAL, MOVE]
         }];
 
         var name = null;
