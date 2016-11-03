@@ -1,4 +1,4 @@
-var melee = class Agitator {
+var melee = class Melee {
     constructor(obj) {
         this.creep = obj.creep;
         this.home = obj.home;
@@ -39,13 +39,14 @@ var melee = class Agitator {
           this.creep.moveTo(this.creep.pos.findClosestByPath(this.creep.room.findExitTo(this.creep.memory.destination)));
       } else {
         //var target = creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
-        var target = this.creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {filter: function(s) { return s.structureType == STRUCTURE_TOWER});
-        if(!target) target = this.creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {filter: function(s) { return s.structureType == STRUCTURE_SPAWN});
+        var target = this.creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {filter: function(s) { return s.structureType == STRUCTURE_TOWER}});
+        if(!target) target = this.creep.pos.findClosestByPath(FIND_HOSTILE_STRUCTURES, {filter: function(s) { return s.structureType == STRUCTURE_SPAWN}});
         if(!target) target = this.creep.pos.findClosestByPath(FIND_HOSTILE_CREEPS);
 
         if (target && this.creep.attack(target) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(target);
         }
     }
+  }
 };
 module.exports = melee;
