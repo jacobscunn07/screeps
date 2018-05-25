@@ -7,6 +7,7 @@
 // var Agitator = require("class.agitator");
 var Harvester = require("harvester");
 var Upgrader = require("upgrader");
+var Repairer = require("repairer");
 
 module.exports.loop = () =>
 {
@@ -15,6 +16,7 @@ module.exports.loop = () =>
     // console.log(JSON.stringify(Harvester));
     // Harvester.create(spawn);
     // Upgrader.create(spawn);
+    // Repairer.create(spawn);
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -25,6 +27,10 @@ module.exports.loop = () =>
         if(creep.memory.role == "upgrader") {
             var upgrader = new Upgrader(creep);
             upgrader.run();
+        }
+        if(creep.memory.role == "repairer") {
+            var repairer = new Repairer(creep);
+            repairer.run();
         }
     }
 }
