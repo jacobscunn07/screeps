@@ -15,7 +15,7 @@ class Harvester {
     }
 
     run() {
-        console.log("Harvester " + this.creep.name + " running...")
+        // console.log("Harvester " + this.creep.name + " running...")
         if(this._fullLoad()) {
             this._dumpEnergySomewhere();
         }
