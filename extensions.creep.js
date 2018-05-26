@@ -12,6 +12,12 @@ class CreepExtensionsRegistrar {
             return this.pos.findClosestByPath(FIND_SOURCES);
         }
 
+        Creep.prototype.tryDepositEnergyIntoStructure = function(structure) {
+            if (this.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                this.moveTo(structure);
+            }
+        }
+
         Creep.prototype.tryMineEnergySource = function(source) {
             if (this.harvest(source) == ERR_NOT_IN_RANGE) {
                 this.moveTo(source);

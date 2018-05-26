@@ -35,9 +35,8 @@ class Harvester {
 
     _dumpEnergySomewhere() {
         var target = this._findAvailableSpawnOrExtension() || this._findAvailableContainer();
-
-        if (target && this.creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(target);
+        if(target) {
+            this.creep.tryDepositEnergyIntoStructure(target);
         }
     }
 
