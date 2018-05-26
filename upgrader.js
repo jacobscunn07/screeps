@@ -16,16 +16,16 @@ class Upgrader {
     }
 
     run() {
-        this._updateUpgradingStatus();
-        if(this._upgrading()) {
-            this._upgradeController();
+        this.updateMemory();
+        if(this.isUpgrading()) {
+            this.upgradeController();
         }
         else {
-            this._getEnergyForUpgrading();
+            this.getEnergy();
         }
     }
 
-    _updateUpgradingStatus() {
+    updateMemory() {
         if (this.creep.memory.upgrading && this.creep.carry.energy == 0) {
             this.creep.memory.upgrading = false;
         }
@@ -35,24 +35,26 @@ class Upgrader {
         }
     }
 
-    _upgrading() {
+    isUpgrading() {
         return this.creep.memory.upgrading;
     }
 
-    _getEnergyForUpgrading() {
-        var target = this.creep.findClosestContainerWithEnergyToMe();
-        this.creep.tryGetEnergyFromContainer(target);
-    }
-
-    _upgradeController() {
+    upgradeController() {
         if (this.creep.upgradeController(this.creep.room.controller) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(this.creep.room.controller);
         }
     }
 
-    _mineEnergy() {
-        var source = this.creep.findClosestSourceToMe();
-        this.creep.tryMineEnergySource(source);
+    getEnergy() {
+        var container = this.creep.findClosestContainerWithEnergyToMe();
+        if(container) {
+            console.log(this.creep.name);
+            this.creep.tryGetEnergyFromContainer(container);
+        }
+        else {
+            var source = this.creep.findClosestSourceToMe();
+            this.creep.tryMineEnergySource(source);
+        }
     }
 }
 
