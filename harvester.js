@@ -15,32 +15,29 @@ class Harvester {
     }
 
     run() {
-        // console.log("Harvester " + this.creep.name + " running...")
-        if(this._fullLoad()) {
-            this._dumpEnergySomewhere();
+        if(this.fullLoad()) {
+            this.depositEnergy();
         }
         else {
-            this._mineEnergy();
+            this.mineEnergy();
         }
     }
 
-    _fullLoad() {
+    fullLoad() {
         return this.creep.carry.energy === this.creep.carryCapacity;
     }
 
-    _mineEnergy() {
+    mineEnergy() {
         var source = this.creep.findClosestSourceToMe();
         this.creep.tryMineEnergySource(source);
     }
 
-    _dumpEnergySomewhere() {
-        var target = this._findAvailableSpawnOrExtension() || this._findAvailableContainer();
-        if(target) {
-            this.creep.tryDepositEnergyIntoStructure(target);
-        }
+    depositEnergy() {
+        var target = this.findAvailableSpawnOrExtension() || this.findAvailableContainer();
+        this.creep.tryDepositEnergyIntoStructure(target);
     }
 
-    _findAvailableSpawnOrExtension() {
+    findAvailableSpawnOrExtension() {
         return this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (structure) => {
                 return (structure.structureType == STRUCTURE_EXTENSION ||
@@ -49,7 +46,7 @@ class Harvester {
         });
     }
 
-    _findAvailableContainer() {
+    findAvailableContainer() {
         return this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: function(c) {
                 return c.structureType == STRUCTURE_CONTAINER && c.store.energy < c.storeCapacity;
