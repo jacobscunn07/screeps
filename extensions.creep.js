@@ -11,6 +11,12 @@ class CreepExtensionsRegistrar {
         Creep.prototype.findClosestSourceToMe = function() {
             return this.pos.findClosestByPath(FIND_SOURCES);
         }
+
+        Creep.prototype.tryMineEnergySource = function(source) {
+            if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+                this.moveTo(source);
+            }
+        }
     }
 }
 
