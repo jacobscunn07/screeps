@@ -1,3 +1,4 @@
+var Bootstrapper = require("bootstrapper");
 var Harvester = require("harvester");
 var Upgrader = require("upgrader");
 var Repairer = require("repairer");
@@ -5,6 +6,7 @@ var Builder = require("builder");
 
 module.exports.loop = () =>
 {
+    Bootstrapper.bootstrap();
     var spawn = Game.spawns["Spawn1"];
     // console.log(spawn);
     // console.log(JSON.stringify(Harvester));
@@ -19,16 +21,16 @@ module.exports.loop = () =>
     // console.log(builders + " builders");
     // console.log(constructionSites + " construction sites");
 
-    if(harvesters < 1) {
+    if(harvesters < 4) {
         Harvester.create(spawn);
     }
-    else if(upgraders < 1) {
+    else if(upgraders < 2) {
         Upgrader.create(spawn);
     }
     // else if(repairers < 3) {
         // Repairer.create(spawn);
     // }
-    else if(builders < 3) {
+    else if(builders < 2) {
         // if(constructionSites > 0) {
             Builder.create(spawn);
         // }
