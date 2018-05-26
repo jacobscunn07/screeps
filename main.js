@@ -8,6 +8,7 @@
 var Harvester = require("harvester");
 var Upgrader = require("upgrader");
 var Repairer = require("repairer");
+var Builder = require("builder");
 
 module.exports.loop = () =>
 {
@@ -17,6 +18,28 @@ module.exports.loop = () =>
     // Harvester.create(spawn);
     // Upgrader.create(spawn);
     // Repairer.create(spawn);
+    var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester').length;
+    var upgraders = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader').length;
+    var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer').length;
+    var builders = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder').length;
+    // var constructionSites = Game.rooms["W1S57"].find(FIND_CONSTRUCTION_SITES).length;
+    // console.log(builders + " builders");
+    // console.log(constructionSites + " construction sites");
+
+    if(harvesters < 1) {
+        Harvester.create(spawn);
+    }
+    else if(upgraders < 1) {
+        Upgrader.create(spawn);
+    }
+    // else if(repairers < 3) {
+        // Repairer.create(spawn);
+    // }
+    else if(builders < 3) {
+        // if(constructionSites > 0) {
+            Builder.create(spawn);
+        // }
+    }
 
     for(var name in Game.creeps) {
         var creep = Game.creeps[name];
@@ -30,7 +53,11 @@ module.exports.loop = () =>
         }
         if(creep.memory.role == "repairer") {
             var repairer = new Repairer(creep);
-            repairer.run();
+            // repairer.run();
+        }
+        if(creep.memory.role == "builder") {
+            var builder = new Builder(creep);
+            builder.run();
         }
     }
 }

@@ -22,7 +22,7 @@ class Upgrader {
             this._upgradeController();
         }
         else {
-            this._getEnergyForUpgrading();
+            this._mineEnergy();
         }
     }
 
@@ -55,6 +55,17 @@ class Upgrader {
         if (this.creep.upgradeController(this.creep.room.controller) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(this.creep.room.controller);
         }
+    }
+
+    _mineEnergy() {
+        var source = this._findClosestEnergySource();
+        if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            this.creep.moveTo(source);
+        }
+    }
+
+    _findClosestEnergySource() {
+        return this.creep.pos.findClosestByPath(FIND_SOURCES);
     }
 }
 
