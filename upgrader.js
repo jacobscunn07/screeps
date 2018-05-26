@@ -21,7 +21,7 @@ class Upgrader {
             this._upgradeController();
         }
         else {
-            this._mineEnergy();
+            this._getEnergyForUpgrading();
         }
     }
 
@@ -40,11 +40,7 @@ class Upgrader {
     }
 
     _getEnergyForUpgrading() {
-        var target = this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: function(c) {
-                return c.structureType == STRUCTURE_CONTAINER && c.store.energy > 0;
-            }
-        });
+        var target = this.creep.findClosestContainerWithEnergyToMe();
         if (this.creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(target);
         }
