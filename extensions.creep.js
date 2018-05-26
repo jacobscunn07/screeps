@@ -18,6 +18,12 @@ class CreepExtensionsRegistrar {
             }
         }
 
+        Creep.prototype.tryGetEnergyFromContainer = function(container) {
+            if (container && this.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                this.moveTo(container);
+            }
+        }
+
         Creep.prototype.tryMineEnergySource = function(source) {
             if (this.harvest(source) == ERR_NOT_IN_RANGE) {
                 this.moveTo(source);

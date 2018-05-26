@@ -41,9 +41,7 @@ class Upgrader {
 
     _getEnergyForUpgrading() {
         var target = this.creep.findClosestContainerWithEnergyToMe();
-        if (this.creep.withdraw(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(target);
-        }
+        this.creep.tryGetEnergyFromContainer(target);
     }
 
     _upgradeController() {

@@ -31,23 +31,14 @@ class Builder {
                 }
             }
         } else {
-            var container = this._findClosestContainerWithEnergy();
-            if (this.creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(container);
-            }
+            var container = this.creep.findClosestContainerWithEnergyToMe();
+            this.creep.tryGetEnergyFromContainer(container);
+
             if(!container) {
                 var source = this.creep.findClosestSourceToMe();
                 this.creep.tryMineEnergySource(source);
             }
         }
-    }
-
-    _findClosestContainerWithEnergy() {
-        return this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
-            filter: function(c) {
-                return c.structureType == STRUCTURE_CONTAINER && c.store.energy > 0;
-            }
-        });
     }
 }
 
