@@ -16,7 +16,6 @@ class Upgrader {
     }
 
     run() {
-        // console.log("Upgrader " + this.creep.name + " running...")
         this._updateUpgradingStatus();
         if(this._upgrading()) {
             this._upgradeController();
@@ -58,14 +57,10 @@ class Upgrader {
     }
 
     _mineEnergy() {
-        var source = this._findClosestEnergySource();
+        var source = this.creep.findClosestSourceToMe();
         if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(source);
         }
-    }
-
-    _findClosestEnergySource() {
-        return this.creep.pos.findClosestByPath(FIND_SOURCES);
     }
 }
 

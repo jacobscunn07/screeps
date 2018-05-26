@@ -29,7 +29,7 @@ class Harvester {
     }
 
     _mineEnergy() {
-        var source = this._findClosestEnergySource();
+        var source = this.creep.findClosestSourceToMe();
         if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(source);
         }
@@ -41,10 +41,6 @@ class Harvester {
         if (target && this.creep.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             this.creep.moveTo(target);
         }
-    }
-
-    _findClosestEnergySource() {
-        return this.creep.pos.findClosestByPath(FIND_SOURCES);
     }
 
     _findAvailableSpawnOrExtension() {

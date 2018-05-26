@@ -1,11 +1,9 @@
+var CreepExtensionsRegistrar = require("extensions.creep");
+
 class Bootstrapper
 {
     static bootstrap() {
-        this.bootstrapCreepExtensions();
-    }
-
-    static bootstrapCreepExtensions() {
-        // console.log("Bootstrapping Creep extensions...");
+        CreepExtensionsRegistrar.register();
     }
 }
 

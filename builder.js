@@ -36,16 +36,12 @@ class Builder {
                 this.creep.moveTo(container);
             }
             if(!container) {
-                var source = this._findClosestEnergySource();
+                var source = this.creep.findClosestSourceToMe();
                 if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
                     this.creep.moveTo(source);
                 }
             }
         }
-    }
-
-    _findClosestEnergySource() {
-        return this.creep.pos.findClosestByPath(FIND_SOURCES);
     }
 
     _findClosestContainerWithEnergy() {
