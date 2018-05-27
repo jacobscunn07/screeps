@@ -24,7 +24,7 @@ class RoomController2Strategy {
             upgraders: upgraders,
             repairers:  repairers,
             builders: builders,
-            all: harvesters.concat(upgraders.concat(builders))
+            all: harvesters.concat(upgraders.concat(builders.concat(repairers)))
         }
     }
 
@@ -41,15 +41,16 @@ class RoomController2Strategy {
 
     createCreep() {
         var spawn = Game.spawns["Spawn1"];
-        if(this.creeps.harvesters.length < 4) {
-            Harvester.create(spawn);
+        var source = this.getSourceForHarvester();
+        if(source && this.creeps.harvesters.length < 4) {
+            Harvester.create(spawn, source);
         }
         else if(this.creeps.upgraders.length < 2) {
             Upgrader.create(spawn);
         }
-        // else if(this.creeps.repairers.length < 3) {
-            // Repairer.create(spawn);
-        // }
+        else if(this.creeps.repairers.length < 4) {
+            Repairer.create(spawn);
+        }
         else if(this.creeps.builders.length < 2) {
             // if(constructionSites > 0) {
                 Builder.create(spawn);
@@ -61,6 +62,30 @@ class RoomController2Strategy {
         this.creeps.all.forEach(function(creep) {
             creep.run();
         });
+    }
+
+    getSourceForHarvester() {
+        var sources = this.room.sources(); 
+        var sourcesMetaData = []; 
+        sources.forEach((source) => {
+            let openSpots = source.findAvailableMiningSpots().length;
+            let takenSpots = _.filter(Game.creeps, creep => { 
+                return creep.room.name === this.room.name && 
+                    creep.memory.role === "harvester" && 
+                    creep.memory.source === source.id 
+            }).length;
+            if(openSpots > takenSpots) {
+                sourcesMetaData.push({ 
+                    source: source, 
+                    openSpots: openSpots, 
+                    takenSpots: takenSpots
+                }); 
+            }
+        });
+        var leastAmountOfMinersFirst =  
+            sourcesMetaData.sort((source1, source2) => source1.takenSpots - source2.takenSpots);
+        // console.log(JSON.stringify(leastAmountOfMinersFirst));
+        return leastAmountOfMinersFirst[0] ? leastAmountOfMinersFirst[0].source : null; 
     }
 }
 

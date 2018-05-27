@@ -48,20 +48,24 @@ class Repairer {
         }
         if(!this.creep.memory.repairing && this.creep.carry.energy == this.creep.carryCapacity) {
             this.creep.memory.repairing = true;
-            this.creep.memory.structure = this._findStructureNeedingMostRepair().id;
+            var structure = this._findStructureNeedingMostRepair();
+            this.creep.memory.structure = structure ? structure.id : null;
         }
         if(this.creep.memory.repairing && this.creep.memory.structure == null) {
-            this.creep.memory.structure = this._findStructureNeedingMostRepair().id;
+            var structure = this._findStructureNeedingMostRepair();
+            this.creep.memory.structure = structure ? structure.id : null;
         }
     }
 
     _repairStructure() {
         var structure = Game.getObjectById(this.creep.memory.structure);
-        if (this.creep.repair(structure) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(structure);
-        }
-        if (structure.hits == structure.hitsMax) {
-            this.creep.memory.structure = null;
+        if(structure) {
+            if (this.creep.repair(structure) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(structure);
+            }
+            if (structure.hits == structure.hitsMax) {
+                this.creep.memory.structure = null;
+            }
         }
     }
 

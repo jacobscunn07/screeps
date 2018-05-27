@@ -3,10 +3,11 @@ class Harvester {
         this.creep = creep;
     }
 
-    static create(spawn) {
+    static create(spawn, source) {
         const body = [WORK, CARRY, MOVE];
         const memory = {
             role: 'harvester',
+            source: source.id
         };
         if (spawn.canCreateCreep(body, undefined, memory) == OK) {
             let name = spawn.createCreep(body, undefined, memory);
@@ -28,7 +29,7 @@ class Harvester {
     }
 
     mineEnergy() {
-        var source = this.creep.findClosestSourceToMe();
+        var source = Game.getObjectById(this.creep.memory.source);
         this.creep.tryMineEnergySource(source);
     }
 
