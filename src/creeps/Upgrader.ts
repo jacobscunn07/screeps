@@ -1,17 +1,15 @@
-import ICreep from './ICreep';
+class Upgrader extends Creep {
+    memory:UpgraderMemory;
 
-class Upgrader implements ICreep {
-
-    private creep: any;
-
-    constructor(creep: any) {
-        this.creep = creep;
+    constructor(creep: Creep) {
+        super(creep.id);
+        this.memory = new UpgraderMemory(creep.memory);
     }
 
     run() {
         this.updateMemory();
         if(this.isUpgrading()) {
-            this.upgradeController();
+            this.upgradeTheController();
         }
         else {
             this.getEnergy();
@@ -19,36 +17,45 @@ class Upgrader implements ICreep {
     }
 
     private updateMemory() {
-        if (this.creep.memory.upgrading && this.creep.carry.energy == 0) {
-            this.creep.memory.upgrading = false;
+        if (this.memory.upgrading && this.carry.energy == 0) {
+            this.memory.upgrading = false;
         }
 
-        if (!this.creep.memory.upgrading && this.creep.carry.energy == this.creep.carryCapacity) {
-            this.creep.memory.upgrading = true;
+        if (!this.memory.upgrading && this.carry.energy == this.carryCapacity) {
+            this.memory.upgrading = true;
         }
     }
 
     private isUpgrading() {
-        return this.creep.memory.upgrading;
+        return this.memory.upgrading;
     }
 
-    private upgradeController() {
-        if(this.creep.upgradeController(this.creep.room.controller) === ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(this.creep.room.controller);
+    private upgradeTheController() {
+        if(this.upgradeController(<StructureController>this.room.controller) === ERR_NOT_IN_RANGE) {
+            this.moveTo((this.room.controller as StructureController).pos);
         }
     }
 
     private getEnergy() {
-        let container = this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        let container = this.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (s: any) => s.structureType === STRUCTURE_CONTAINER && s.store.energy > 0,
         });
-        let source = this.creep.pos.findClosestByPath(FIND_SOURCES);
-        if(this.creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(container);
+        let source = this.pos.findClosestByPath(FIND_SOURCES);
+        if(this.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            this.moveTo(container);
         }
-        else if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(source);
+        else if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+            this.moveTo(source);
         }
+    }
+}
+
+class UpgraderMemory implements CreepMemory {
+    role:string = "upgrader";
+    upgrading:boolean = false;
+
+    constructor(memory: any) {
+        this.upgrading = memory.upgrading;
     }
 }
 
