@@ -93,7 +93,6 @@ class RC1Room implements IRoom {
         });
         var leastAmountOfMinersFirst =
             sourcesMetaData.sort((source1: any, source2: any) => source1.takenSpots - source2.takenSpots);
-        // console.log(JSON.stringify(leastAmountOfMinersFirst));
         return leastAmountOfMinersFirst[0] ? leastAmountOfMinersFirst[0].source : null;
     }
 

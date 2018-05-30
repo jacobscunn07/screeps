@@ -1,7 +1,6 @@
 import IRoom from './../IRoom';
 import CreepFactory from './../../creeps/creepFactory/CreepFactory';
 import Harvester from './../../creeps/Harvester';
-import TheHarvester from './../../creeps/TheHarvester';
 import Upgrader from './../../creeps/Upgrader';
 import Repairer from './../../creeps/Repairer';
 import NullCreep from './../../creeps/NullCreep';
@@ -11,6 +10,8 @@ import CreepRole from './../../creeps/constants';
 import HarvesterMother from './../../creeps/HarvesterMother';
 import UpgraderMother from './../../creeps/UpgraderMother';
 import BuilderMother from './../../creeps/BuilderMother';
+import RepairerMother from './../../creeps/RepairerMother';
+// import TheRepairer from './../../creeps/TheRepairer';
 
 class RC2Room implements IRoom {
 
@@ -25,6 +26,7 @@ class RC2Room implements IRoom {
                 harvesters: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'harvester'),
                 upgraders: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'upgrader'),
                 builders: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'builder'),
+                repairers: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'repairer'),
             },
             strucutures: {
                 constructionSites: null,
@@ -54,7 +56,11 @@ class RC2Room implements IRoom {
             let spawn = Game.spawns["Spawn1"];
             BuilderMother.create(spawn);
         }
-        else if(this.stats.creeps.harvesters.length < 2) {
+        else if(this.stats.creeps.repairers.length < 1) {
+            let spawn = Game.spawns["Spawn1"];
+            RepairerMother.create(spawn);
+        }
+        else if(this.stats.creeps.harvesters.length < 4) {
             let spawn = Game.spawns["Spawn1"];
             let source = this.getSourceForHarvester();
             if(source) {
@@ -69,6 +75,10 @@ class RC2Room implements IRoom {
             let spawn = Game.spawns["Spawn1"];
             BuilderMother.create(spawn);
         }
+        else if(this.stats.creeps.repairers.length < 2) {
+            let spawn = Game.spawns["Spawn1"];
+            RepairerMother.create(spawn);
+        }
     }
 
     private runCreeps() {
@@ -81,11 +91,7 @@ class RC2Room implements IRoom {
     private getCreepRole(creep: Creep) {
         switch(creep.memory.role) {
             case "harvester":
-                let th = new TheHarvester(creep.id, creep.memory);
-                // console.log(th.name);
-                // th.run();
-                return th;
-                // return new Harvester(creep);
+                return new Harvester(creep);
             case "upgrader":
                 return new Upgrader(creep);
             case "repairer":
@@ -117,7 +123,6 @@ class RC2Room implements IRoom {
         });
         var leastAmountOfMinersFirst =
             sourcesMetaData.sort((source1: any, source2: any) => source1.takenSpots - source2.takenSpots);
-        // console.log(JSON.stringify(leastAmountOfMinersFirst));
         return leastAmountOfMinersFirst[0] ? leastAmountOfMinersFirst[0].source : null;
     }
 
