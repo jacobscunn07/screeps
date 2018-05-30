@@ -4,7 +4,7 @@ import Harvester from './../creeps/Harvester';
 import Upgrader from './../creeps/Upgrader';
 import Repairer from './../creeps/Repairer';
 import NullCreep from './../creeps/NullCreep';
-import Builder from 'creeps/Builder';
+import Builder from './../creeps/Builder';
 
 class MyRoom implements IRoom {
 

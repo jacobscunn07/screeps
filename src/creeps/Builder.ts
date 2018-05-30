@@ -1,11 +1,9 @@
-import ICreep from './ICreep';
+class Builder extends Creep {
+    memory:BuilderMemory;
 
-class Builder implements ICreep {
-
-    private creep: any;
-
-    constructor(creep: any) {
-        this.creep = creep;
+    constructor(creep: Creep) {
+        super(creep.id);
+        this.memory = new BuilderMemory(creep.memory);
     }
 
     run() {
@@ -19,39 +17,48 @@ class Builder implements ICreep {
     }
 
     private updateMemory() {
-        if (this.creep.memory.building && this.creep.carry.energy == 0) {
-            this.creep.memory.building = false;
+        if (this.memory.building && this.carry.energy == 0) {
+            this.memory.building = false;
         }
-        if (!this.creep.memory.building && this.creep.carry.energy == this.creep.carryCapacity) {
-            this.creep.memory.building = true;
+        if (!this.memory.building && this.carry.energy == this.carryCapacity) {
+            this.memory.building = true;
         }
     }
 
     private isBuilding() {
-        return this.creep.memory.building;
+        return this.memory.building;
     }
 
     private buildStructure() {
-        var structures = this.creep.room.find(FIND_CONSTRUCTION_SITES);
+        var structures = this.room.find(FIND_CONSTRUCTION_SITES);
         if (structures.length) {
             var structure = _.first(structures);
-            if (this.creep.build(structure) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(structure);
+            if (this.build(structure) == ERR_NOT_IN_RANGE) {
+                this.moveTo(structure);
             }
         }
     }
 
     private getEnergy() {
-        let container = this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
+        let container = this.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (s: any) => s.structureType === STRUCTURE_CONTAINER && s.store.energy > 0,
         });
-        let source = this.creep.pos.findClosestByPath(FIND_SOURCES);
-        if(this.creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(container);
+        let source = this.pos.findClosestByPath(FIND_SOURCES);
+        if(this.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+            this.moveTo(container);
         }
-        else if (this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(source);
+        else if (this.harvest(source) == ERR_NOT_IN_RANGE) {
+            this.moveTo(source);
         }
+    }
+}
+
+class BuilderMemory implements CreepMemory {
+    role:string = "builder";
+    building:boolean = false;
+
+    constructor(memory: any) {
+        this.building = memory.building;
     }
 }
 
