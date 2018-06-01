@@ -12,26 +12,32 @@ import UpgraderMother from './../../creeps/UpgraderMother';
 import BuilderMother from './../../creeps/BuilderMother';
 import RepairerMother from './../../creeps/RepairerMother';
 
-class RC2Room implements IRoom {
+import BaseRoom from './../BaseRoom';
 
-    private room: Room;
+class RC2Room extends BaseRoom {
     private stats: any;
 
     constructor(room: Room) {
-        this.room = room;
+        super(room.name);
         this.stats = {
-            sources: this.room.find(FIND_SOURCES),
+            sources: this.find(FIND_SOURCES),
             creeps: {
-                harvesters: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'harvester'),
-                upgraders: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'upgrader'),
-                builders: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'builder'),
-                repairers: _.filter(Game.creeps, (c: any) => c.room.name === this.room.name && c.memory.role === 'repairer'),
+                harvesters: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'harvester'),
+                upgraders: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'upgrader'),
+                builders: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'builder'),
+                repairers: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'repairer'),
             },
             strucutures: {
                 constructionSites: null,
                 buildings: null,
             }
         }
+
+        // console.log(JSON.stringify(this.getHarvesterContainers().length));
+        // for(var name in this.harvesterContainers) {
+        //     console.log(name);
+        //     console.log(JSON.stringify(this.harvesterContainers[name]));
+        // }
     }
 
     run() {
@@ -103,12 +109,12 @@ class RC2Room implements IRoom {
     }
 
     private getSourceForHarvester() {
-        var sources = this.room.find(FIND_SOURCES);
+        var sources = this.find(FIND_SOURCES);
         var sourcesMetaData = [] as any;
         sources.forEach((source: Source) => {
             let openSpots = this.findAvailableMiningSpots(source).length;
             let takenSpots = _.filter(Game.creeps, (creep: any) => {
-                return creep.room.name === this.room.name &&
+                return creep.room.name === this.name &&
                     creep.memory.role === "harvester" &&
                     creep.memory.source === source.id
             }).length;
