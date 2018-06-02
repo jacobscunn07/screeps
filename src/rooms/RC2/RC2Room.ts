@@ -18,6 +18,7 @@ import BaseRoom from './../BaseRoom';
 import TransporterMemory from 'creeps/Transporter/TransporterMemory';
 
 class RC2Room extends BaseRoom {
+    repairThreshhold:number = .7;
     private stats: any;
 
     constructor(room: Room) {
@@ -67,7 +68,7 @@ class RC2Room extends BaseRoom {
             let spawn = Game.spawns["Spawn1"];
             TransporterMother.create(spawn);
         }
-        else if(this.stats.creeps.harvesters.length < 4) {
+        else if(this.stats.creeps.harvesters.length < 2) {
             let spawn = Game.spawns["Spawn1"];
             let source = this.getSourceForHarvester();
             if(source) {
@@ -77,6 +78,10 @@ class RC2Room extends BaseRoom {
         else if(this.stats.creeps.upgraders.length < 2) {
             let spawn = Game.spawns["Spawn1"];
             UpgraderMother.create(spawn);
+        }
+        else if(this.stats.creeps.transporters.length < 2) {
+            let spawn = Game.spawns["Spawn1"];
+            TransporterMother.create(spawn);
         }
         // else if(this.stats.creeps.builders.length < 2) {
         //     let spawn = Game.spawns["Spawn1"];

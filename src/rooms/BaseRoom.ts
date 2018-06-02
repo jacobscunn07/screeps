@@ -72,12 +72,24 @@ abstract class BaseRoom extends Room {
     sources:Array<Source>;
     containers:RoomContainerList;
     extensions:Array<StructureExtension>;
+    constructionSites:Array<ConstructionSite>;
+    repairableStructures:Array<Structure>;
+    abstract repairThreshhold:number;
     constructor(name: string) {
         super(name);
         this.sources = this.find(FIND_SOURCES);
         this.extensions = this.getExtensions();
         this.containers = this.findContainers();
+        this.constructionSites = this.findConstructionSites();
+        this.repairableStructures = this.findStructuresNeedingRepair();
+    }
 
+    private findStructuresNeedingRepair() {
+        return _.filter(this.find(FIND_MY_STRUCTURES), (s) => s.hits < s.hitsMax*this.repairThreshhold);
+    }
+
+    private findConstructionSites() {
+        return this.find(FIND_MY_CONSTRUCTION_SITES);
     }
 
     private getExtensions():Array<StructureExtension> {
