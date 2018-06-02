@@ -70,73 +70,59 @@ class KeyedCollection<T> implements IKeyedCollection<T> {
 
 abstract class BaseRoom extends Room {
     sources:Array<Source>;
-    harvesterContainers:KeyedCollection<StructureContainer>;
+    containers:RoomContainerList;
+    extensions:Array<StructureExtension>;
     constructor(name: string) {
         super(name);
         this.sources = this.find(FIND_SOURCES);
-        this.harvesterContainers = this.getHarvesterContainers();
+        this.extensions = this.getExtensions();
+        this.containers = this.findContainers();
+
     }
 
-    getHarvesterContainers = ():KeyedCollection<StructureContainer> => {
-        let sources = this.sources;
-        let harvesterContainers:any = {};
-        // let containers: Map<string, StructureContainer> = new Map<string, StructureContainer>();
-        let containers = {} as IDictionary<StructureContainer>;
-        let containerz = new KeyedCollection<StructureContainer>();
-        for(var i = 0; i < sources.length; i++) {
-            let source = sources[i];
-            let name = source.room.name;
-            let x = source.pos.x - 1;
-            let y = source.pos.y - 1;
+    private getExtensions():Array<StructureExtension> {
+        let extensions = _.filter(this.find(FIND_MY_STRUCTURES), (s) => s.structureType === STRUCTURE_EXTENSION);
+        return _.map(extensions, (ext) => new StructureExtension(ext.id));
+    }
 
-            for(let j = 0; j < 3; j++) {
+    private findContainers() {
+        const containers = <Array<StructureContainer>>_.filter(this.find(FIND_STRUCTURES), (s) => s.structureType === STRUCTURE_CONTAINER);
+        let harvesterContainers:Array<StructureContainer> = new Array<StructureContainer>();
+        let storageContainers:Array<StructureContainer> = new Array<StructureContainer>();
+        let temp = {
+            harvsterContainers: new Array<RoomHarvesterContainer>(),
+            storageContainers: new Array<RoomStorageContainer>()
+        }
+        let cs = new RoomContainerList();
+        for(var i = 0; i < containers.length; i++) {
+            let container = <StructureContainer>containers[i];
+            let name = container.room.name;
+            let x = container.pos.x - 1;
+            let y = container.pos.y - 1;
+            let sources = this.find(FIND_SOURCES);
+
+            for(var j = 0; j < 3; j++) {
                 for(var k = 0; k < 3; k++) {
                     let pos = new RoomPosition(x, y, name);
-                    let structures = pos.lookFor(LOOK_STRUCTURES);
-                    let container = <StructureContainer>_.find(structures, (structure => structure.structureType === STRUCTURE_CONTAINER));
-                    if(container) {
-                        harvesterContainers[source.id] = container;
-                        // containers.set(source.id, container);
-                        containers[source.id] = container;
-                        containerz.Add(source.id, container);
+                    let source = <Source>_.find(sources, (s:Source) => s.pos.x == pos.x && s.pos.y == pos.y);
+                    if(source) {
+                        harvesterContainers.push(container);
+                        temp.harvsterContainers.push({
+                            source: source.id,
+                            container: container
+                        });
+                        cs.harvesterContainers.push(new RoomHarvesterContainer(source.id, container));
+
                     }
                     x++;
                 }
-                x = source.pos.x - 1;
                 y++;
+                x = container.pos.x - 1;
             }
         }
-        // console.log("DICTIONARY: " + JSON.stringify(containers.length));
-        return containerz;
-    }
-
-    private getSources() {
-        let sources = this.find(FIND_SOURCES);
-        let mySources = new Array<MySource>();
-        for(var i = 0; i < sources.length; i++) {
-            let mySource = new MySource(sources[i].id);
-            mySources.push(mySource);
-        }
-        return mySources;
-    }
-
-    findContainerForSource(source: Source):StructureContainer|undefined {
-        var name = source.room.name;
-        var x = source.pos.x - 1;
-        var y = source.pos.y - 1;
-
-        for(var i = 0; i < 3; i++) {
-            for(var j = 0; j < 3; j++) {
-                let pos = new RoomPosition(x, y, name);
-                let structures = pos.lookFor(LOOK_STRUCTURES);
-                let container = _.find(structures, (structure => structure.structureType === STRUCTURE_CONTAINER));
-                if(container) return <StructureContainer>container;
-                x++;
-            }
-            x = source.pos.x - 1;
-            y++;
-        }
-        return undefined;
+        let ids = _.map(cs.harvesterContainers, c => c.container.id);
+        cs.storageContainers = _.map(_.filter(containers, c => !_.includes(ids, c.id)), co => new RoomStorageContainer(co));
+        return cs;
     }
 }
 
@@ -165,6 +151,29 @@ class MySource extends Source {
         }
         return undefined;
     }
+}
+
+class RoomHarvesterContainer {
+    source:string = "";
+    container:StructureContainer;
+
+    constructor(source:string, container:StructureContainer) {
+        this.source = source;
+        this.container = container;
+    }
+}
+
+class RoomStorageContainer {
+    container:StructureContainer;
+
+    constructor(container:StructureContainer) {
+        this.container = container;
+    }
+}
+
+class RoomContainerList {
+    harvesterContainers:Array<RoomHarvesterContainer> = new Array<RoomHarvesterContainer>();
+    storageContainers:Array<RoomStorageContainer> = new Array<RoomStorageContainer>();
 }
 
 export default BaseRoom;

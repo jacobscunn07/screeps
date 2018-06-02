@@ -5,14 +5,17 @@ import Upgrader from './../../creeps/Upgrader';
 import Repairer from './../../creeps/Repairer';
 import NullCreep from './../../creeps/NullCreep';
 import Builder from './../../creeps/Builder';
+import Transporter from './../../creeps/Transporter/Transporter';
 import Queue from './Queue';
 import CreepRole from './../../creeps/constants';
 import HarvesterMother from './../../creeps/HarvesterMother';
 import UpgraderMother from './../../creeps/UpgraderMother';
 import BuilderMother from './../../creeps/BuilderMother';
 import RepairerMother from './../../creeps/RepairerMother';
+import TransporterMother from './../../creeps/Transporter/TransporterMother';
 
 import BaseRoom from './../BaseRoom';
+import TransporterMemory from 'creeps/Transporter/TransporterMemory';
 
 class RC2Room extends BaseRoom {
     private stats: any;
@@ -26,18 +29,13 @@ class RC2Room extends BaseRoom {
                 upgraders: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'upgrader'),
                 builders: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'builder'),
                 repairers: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'repairer'),
+                transporters: _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === 'transporter'),
             },
             strucutures: {
                 constructionSites: null,
                 buildings: null,
             }
         }
-
-        // console.log(JSON.stringify(this.getHarvesterContainers().length));
-        // for(var name in this.harvesterContainers) {
-        //     console.log(name);
-        //     console.log(JSON.stringify(this.harvesterContainers[name]));
-        // }
     }
 
     run() {
@@ -57,13 +55,17 @@ class RC2Room extends BaseRoom {
             let spawn = Game.spawns["Spawn1"];
             UpgraderMother.create(spawn);
         }
-        else if(this.stats.creeps.builders.length < 1) {
+        // else if(this.stats.creeps.builders.length < 1) {
+        //     let spawn = Game.spawns["Spawn1"];
+        //     BuilderMother.create(spawn);
+        // }
+        // else if(this.stats.creeps.repairers.length < 1) {
+        //     let spawn = Game.spawns["Spawn1"];
+        //     RepairerMother.create(spawn);
+        // }
+        else if(this.stats.creeps.transporters.length < 1) {
             let spawn = Game.spawns["Spawn1"];
-            BuilderMother.create(spawn);
-        }
-        else if(this.stats.creeps.repairers.length < 1) {
-            let spawn = Game.spawns["Spawn1"];
-            RepairerMother.create(spawn);
+            TransporterMother.create(spawn);
         }
         else if(this.stats.creeps.harvesters.length < 4) {
             let spawn = Game.spawns["Spawn1"];
@@ -76,20 +78,64 @@ class RC2Room extends BaseRoom {
             let spawn = Game.spawns["Spawn1"];
             UpgraderMother.create(spawn);
         }
-        else if(this.stats.creeps.builders.length < 2) {
-            let spawn = Game.spawns["Spawn1"];
-            BuilderMother.create(spawn);
-        }
-        else if(this.stats.creeps.repairers.length < 2) {
-            let spawn = Game.spawns["Spawn1"];
-            RepairerMother.create(spawn);
-        }
+        // else if(this.stats.creeps.builders.length < 2) {
+        //     let spawn = Game.spawns["Spawn1"];
+        //     BuilderMother.create(spawn);
+        // }
+        // else if(this.stats.creeps.repairers.length < 2) {
+        //     let spawn = Game.spawns["Spawn1"];
+        //     RepairerMother.create(spawn);
+        // }
     }
 
     private runCreeps() {
         for(const name in Game.creeps) {
-            var creep = this.getCreepRole(Game.creeps[name]);
-            creep.run();
+            const creep = Game.creeps[name];
+
+            if(creep.memory.role === "harvester") {
+                let harvester = new Harvester(creep);
+                if(harvester.isFull()) {
+                    let containerGroup = _.find(this.containers.harvesterContainers, (c) => c.source === harvester.memory.source);
+                    if(containerGroup) {
+                        let container = containerGroup.container;
+                        if(container) {
+                            harvester.depositEnergyIntoContainer(container);
+                        }
+                    }
+                    harvester.depositEnergy();
+                }
+                else {
+                    harvester.mineEnergy();
+                }
+            }
+            else if (creep.memory.role === "transporter") {
+                let transporter = new Transporter(creep);
+                if(!transporter.spawning) {
+                    if(transporter.isTransporting()) {
+                        let containerGroup = _.find(this.containers.storageContainers, (c) => c.container.store.energy < c.container.storeCapacity);
+                        if(containerGroup) {
+                            let container = containerGroup.container;
+                            if(container) {
+                                transporter.depositEnergy(container);
+                            }
+                        }
+                    }
+                    else {
+                        let containerGroup = _.find(this.containers.harvesterContainers, (c) => c.container.store.energy > 0);
+                        if(containerGroup) {
+                            let container = containerGroup.container;
+                            if(container) {
+                                transporter.getEnergy(container);
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                var concreteCreep = this.getCreepRole(creep);
+                concreteCreep.run();
+            }
+
         }
     }
 

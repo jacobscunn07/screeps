@@ -7,27 +7,33 @@ class Harvester extends Creep {
     }
 
     run() {
-        if(this.isFull()) {
-            this.depositEnergy();
-        }
-        else {
-            this.mineEnergy();
-        }
+        // if(this.isFull()) {
+        //     this.depositEnergy();
+        // }
+        // else {
+        //     this.mineEnergy();
+        // }
     }
 
-    private isFull() {
+    isFull() {
         return this.carry.energy === this.carryCapacity;
     }
 
-    private mineEnergy() {
+    mineEnergy() {
         var source = <Source>Game.getObjectById(this.memory.source);
         if (this.harvest(source) == ERR_NOT_IN_RANGE) {
             this.moveTo(source);
         }
     }
 
-    private depositEnergy() {
+    depositEnergy() {
         let target = this.findAvailableSpawnOrExtension() || this.findAvailableContainer();
+        if (this.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
+    }
+
+    depositEnergyIntoContainer(target:StructureContainer) {
         if (this.transfer(target, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
             this.moveTo(target);
         }
@@ -53,7 +59,7 @@ class Harvester extends Creep {
 
 class HarvesterMemory implements CreepMemory {
     role:string = "harvester";
-    source:string|undefined = undefined;
+    source:string = "";
 
     constructor(memory: any) {
         this.source = memory.source;
