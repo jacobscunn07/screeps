@@ -68,20 +68,53 @@ class KeyedCollection<T> implements IKeyedCollection<T> {
     }
 }
 
+import Transporter from './../creeps/Transporter/Transporter';
+import Harvester from './../creeps/Harvester';
+import Upgrader from './../creeps/Upgrader';
+import Builder from './../creeps/Builder';
+import Repairer from './../creeps/Repairer';
+
 abstract class BaseRoom extends Room {
     sources:Array<Source>;
     containers:RoomContainerList;
+    spawns:Array<StructureSpawn>;
     extensions:Array<StructureExtension>;
     constructionSites:Array<ConstructionSite>;
     repairableStructures:Array<Structure>;
+
+    // creeps
+    transporters:Array<Transporter>;
+    harvesters:Array<Harvester>;
+    upgraders:Array<Upgrader>;
+    builders:Array<Builder>;
+    repairers:Array<Repairer>;
+
+    // abstract properties
     abstract repairThreshhold:number;
+
     constructor(name: string) {
         super(name);
         this.sources = this.find(FIND_SOURCES);
-        this.extensions = this.getExtensions();
+        // this.extensions = this.getExtensions();
         this.containers = this.findContainers();
         this.constructionSites = this.findConstructionSites();
         this.repairableStructures = this.findStructuresNeedingRepair();
+
+        //spawning structures
+        this.extensions = this.getExtensions();
+        this.spawns = this.getSpawns();
+
+        // creeps
+        this.harvesters = _.map(this.getCreepsInRole("harvester"), c => new Harvester(c));
+        this.transporters = _.map(this.getCreepsInRole("transporter"), c => new Transporter(c));
+        this.upgraders = _.map(this.getCreepsInRole("upgrader"), c => new Upgrader(c));
+        this.builders = _.map(this.getCreepsInRole("builder"), c => new Builder(c));
+        this.repairers = _.map(this.getCreepsInRole("repairer"), c => new Repairer(c));
+
+    }
+
+    private getCreepsInRole(role:string) {
+        return _.filter(Game.creeps, (c: any) => c.room.name === this.name && c.memory.role === role)
     }
 
     private findStructuresNeedingRepair() {
@@ -95,6 +128,11 @@ abstract class BaseRoom extends Room {
     private getExtensions():Array<StructureExtension> {
         let extensions = _.filter(this.find(FIND_MY_STRUCTURES), (s) => s.structureType === STRUCTURE_EXTENSION);
         return _.map(extensions, (ext) => new StructureExtension(ext.id));
+    }
+
+    private getSpawns():Array<StructureSpawn> {
+        let extensions = _.filter(this.find(FIND_MY_STRUCTURES), (s) => s.structureType === STRUCTURE_SPAWN);
+        return _.map(extensions, (ext) => new StructureSpawn(ext.id));
     }
 
     private findContainers() {
