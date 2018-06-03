@@ -100,13 +100,16 @@ class RC2Room extends BaseRoom {
             if(creep.memory.role === "harvester") {
                 let harvester = new Harvester(creep);
                 if(harvester.isFull()) {
-                    let containerGroup = _.find(this.containers.harvesterContainers, (c) => c.source === harvester.memory.source);
-                    if(containerGroup) {
-                        let container = containerGroup.container;
-                        if(container) {
-                            harvester.depositEnergyIntoContainer(container);
+                    if(this.stats.creeps.transporters.length > 0) {
+                        let containerGroup = _.find(this.containers.harvesterContainers, (c) => c.source === harvester.memory.source);
+                        if(containerGroup) {
+                            let container = containerGroup.container;
+                            if(container) {
+                                harvester.depositEnergyIntoContainer(container);
+                            }
                         }
                     }
+
                     harvester.depositEnergy();
                 }
                 else {
@@ -140,7 +143,6 @@ class RC2Room extends BaseRoom {
                 var concreteCreep = this.getCreepRole(creep);
                 concreteCreep.run();
             }
-
         }
     }
 
